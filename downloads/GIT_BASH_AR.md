@@ -123,6 +123,53 @@ git ls-files | wc -l
 
 ---
 
+## تسجيل الدخول من المتصفح (مش من التيرمنال)
+
+Git for Windows بييجي معاه **Git Credential Manager** اللي بيفتح المتصفح لتسجيل الدخول.
+
+تحقق إنه موجود:
+
+```bash
+git --version
+git credential-manager --version
+```
+
+لو الأمر التاني قال `command not found`، حدّث Git for Windows وسيب علامة **Git Credential Manager** أثناء التثبيت.
+
+اضبطه مرة واحدة:
+
+```bash
+git config --global credential.helper manager
+git config --global credential.gitHubAuthModes browser
+```
+
+وبعدها:
+
+```bash
+git push -u origin main
+```
+
+هتفتح نافذة المتصفح تلقائيًا: **Sign in to GitHub** ← **Authorize**. التيرمنال مش هيطلب باسورد.
+
+لو المتصفح ما فتحش، هيطبع كود ولينك — افتح `https://github.com/login/device` واكتب الكود.
+
+### بديل: GitHub CLI
+
+```bash
+gh auth login
+```
+
+اختار: `GitHub.com` ← `HTTPS` ← **Login with a web browser** ← انسخ الكود ← Enter ← المتصفح يفتح ← Authorize. وبعدها:
+
+```bash
+gh auth setup-git
+git push -u origin main
+```
+
+> لا تكتب أي token في الشات ولا في ملف داخل المشروع.
+
+---
+
 ## مشاكل شائعة
 
 | المشكلة | الحل |
