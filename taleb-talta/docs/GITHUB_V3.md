@@ -1,64 +1,81 @@
-# نقل المشروع إلى مستودع Taleb-Talta-v3
+# نشر المشروع على Taleb-Talta-V3
 
-## 1) ما تم التحقق منه فعليًا
+## 1) الوضع الحالي
 
-المستودع `lolooooo2025-lab/Taleb-Talta-v2` موجود، لكنه **نسخة Fork من مشروع `frappe/lms`** ولا علاقة له بمشروعنا:
-
-| البند | القيمة |
+| البند | الحالة |
 |---|---|
-| النوع | Fork من `frappe/lms` |
-| الفروع | 106 فرع |
-| التاغَات | 102 تاغ |
-| الفرع الافتراضي | `develop` |
-| تعديلات خاصة بك | **لا يوجد** — كل الكوميتات من مؤلفي `frappe/lms`، والنسخة لم تُدفع إليها أي تغييرات بعد إنشائها |
-| طلبات دمج مفتوحة | 0 |
+| `Taleb-Talta-v2` (Fork من frappe/lms) | **اتحذفت** ✅ |
+| `Taleb-Talta-V3` | **اتعملت** ✅ — مستودع عادي مش Fork، الفرع الافتراضي `main` |
+| محتوياتها حاليًا | `README.md` فقط (Initial commit) |
+| المشروع الجاهز | **291 ملف** — التطبيق في الجذر و`render.yaml` في الجذر |
+| الكوميت المتحَضّر | جاهز ومبني فوق الكوميت الحالي بتاعك، ومستني إذن الرفع فقط |
 
-معنى ذلك أن حذف هذه النسخة **لا يفقدك أي عمل خاص بك**؛ المحتوى الأصلي موجود في `frappe/lms`.
+## 2) العقبة المتبقية: صلاحية الكتابة
 
-## 2) لماذا لم أنفذ الحذف والرفع وإعادة التسمية
+اتصال GitHub في الجلسة الحالية بيقدر يكتب على مستودع `moodle` فقط. الاختبارات الفعلية:
 
-اتصال GitHub المتاح لي في هذه الجلسة لديه صلاحية كتابة على مستودع `moodle` فقط. المحاولات الفعلية على `Taleb-Talta-v2`:
+| الاختبار | على `moodle` | على `Taleb-Talta-V3` |
+|---|---|---|
+| إنشاء blob (صلاحية `contents=write`) | ✅ نجح | ❌ `403 Resource not accessible by integration` |
+| `git push` | ✅ نجح | ❌ `403 Permission … denied` |
 
-| العملية | النتيجة |
-|---|---|
-| إعادة التسمية إلى `Taleb-Talta-v3` | `403 Resource not accessible by integration` — تحتاج `administration=write` |
-| رفع الملفات `git push` | `403 Permission … denied` |
-| قراءة حالة حماية الفروع | `403` |
+**السبب:** الرمز (token) المستخدم في هذه الجلسة اتصدر وقت بداية الجلسة مربوطًا بمستودع `moodle`. إضافة المستودع الجديد لتطبيق Arena على GitHub **لا تحدّث رمزًا صدر بالفعل**.
 
-لذلك التنفيذ يحتاج إما صلاحية إضافية، أو تنفيذه من حسابك مباشرة (دقائق معدودة).
+### الحل من داخل Arena
 
-## 3) الطريقة الأسرع والموصى بها — من حسابك
+أعد ربط GitHub من إعدادات الاتصال في Arena (Disconnect ثم Connect)، واختَر عند التفويض مستودع `Taleb-Talta-V3` أو **All repositories**. بعدها ابعت رسالة جديدة وسأرفع الملفات فورًا.
 
-بما أن `v2` مجرد Fork غير معدّل، فالأنظف هو حذفه وإنشاء مستودع جديد باسم `v3` بدل إعادة تسميته؛ لأن إعادة التسمية تُبقي عبارة **"forked from frappe/lms"** وكل الفروع والتاغَات القديمة.
+بديلًا: افتح جلسة/محادثة جديدة على مستودع `Taleb-Talta-V3` نفسها.
 
-1. **احذف النسخة القديمة**:
-   `https://github.com/lolooooo2025-lab/Taleb-Talta-v2` ← **Settings** ← أسفل الصفحة **Danger Zone** ← **Delete this repository** ← اكتب اسم المستودع للتأكيد.
-2. **أنشئ مستودعًا جديدًا فارغًا** باسم `Taleb-Talta-v3` (Private أفضل)، **بدون** README أو `.gitignore` أو License.
-3. **فك ضغط** `Taleb-Talta-render-upload.zip`.
-4. **ارفع محتويات المجلد** — وليس المجلد نفسه — إلى جذر المستودع:
-   - بالواجهة: **Add file ← Upload files** ← اسحب كل الملفات والمجلدات ← **Commit changes**.
-   - أو بالأوامر (أدق وأضمن): من داخل المجلد بعد فك الضغط نفّذ السكربت المرفق:
-     ```bash
-     bash publish-v3.sh
-     ```
-     السكربت ينشئ المستودع ويرفع الملفات على فرع `main`، ويرفض العمل لو وجد أي ملف `.env` خاص داخل المجلد.
-5. **تأكد أن `render.yaml` في جذر المستودع** (وليس داخل مجلد فرعي).
-6. **Render**: **New ← Blueprint** ← اختر `Taleb-Talta-v3` ← الفرع `main` ← أدخل القيم السرية في لوحة Render فقط.
-7. بعد النشر افتح `https://SERVICE-NAME.onrender.com/healthz` وتأكد أن النتيجة `{"status":"ok"}`.
+> لأمانك: **لا ترسل أي token أو باسورد في الشات** — التفويض بيتم من واجهة Arena/GitHub فقط.
 
-## 4) لو تريد أن أنفذها أنا
+## 3) لو هترفعها بنفسك
 
-امنح تطبيق Arena صلاحية الوصول إلى المستودع:
+### الطريقة الأسهل بدون أوامر — GitHub Desktop
 
-**GitHub ← Settings ← Applications ← Installed GitHub Apps ← Arena ← Configure ← Repository access**
-ثم أضف `Taleb-Talta-v2` (أو اختر **All repositories**) واحفظ.
+1. ثبّت **GitHub Desktop** وسجّل دخول بحسابك.
+2. **File ← Clone repository** ← اختر `Taleb-Talta-V3`.
+3. فك ضغط `Taleb-Talta-render-upload.zip`.
+4. انسخ **محتويات** المجلد (وليس المجلد نفسه) داخل مجلد المستودع المستنسخ، واقبل استبدال `README.md`.
+5. في GitHub Desktop: اكتب رسالة كوميت ← **Commit to main** ← **Push origin**.
 
-- حذف الملفات ورفعها يحتاج صلاحية **Contents: Read and write**.
-- **إعادة تسمية المستودع** تحتاج **Administration: Read and write**. لو التطبيق لا يملكها ستظل النتيجة `403`، ووقتها غيّر الاسم بنفسك في ثانية:
-  **Settings ← Repository name ← `Taleb-Talta-v3` ← Rename**.
+### بالأوامر — السكربت الجاهز
 
-بعد ذلك اكتب لي «تمام» وسأنفذ الحذف والرفع مباشرة.
+من داخل المجلد بعد فك الضغط:
+
+```bash
+gh auth login          # مرة واحدة فقط
+bash publish-v3.sh
+```
+
+السكربت:
+
+- يرفض العمل لو لقى أي ملف `.env` خاص داخل المجلد.
+- ينضّف `__pycache__` و`storage` قبل الرفع.
+- يدمج الكوميت الأولي الموجود في المستودع بدل ما يكتب فوقه بالقوة (تم اختبار المسار بنجاح).
+- يرفع كل الملفات على فرع `main`.
+
+### يدويًا بالكامل
+
+```bash
+cd path/to/unzipped-folder
+git init -b main
+git add -A
+git commit -m "Taleb Talta v3"
+git remote add origin https://github.com/lolooooo2025-lab/Taleb-Talta-V3.git
+git fetch origin main
+git merge --allow-unrelated-histories -X ours --no-edit origin/main -m "Merge initial commit"
+git push -u origin main
+```
+
+## 4) بعد الرفع مباشرة
+
+1. تأكد أن **`render.yaml` في جذر المستودع** — وليس داخل مجلد فرعي.
+2. Render: **New ← Blueprint** ← اختر `Taleb-Talta-V3` ← الفرع `main`.
+3. أدخل القيم من ملف `render-secrets.env` في **لوحة Render فقط**.
+4. `TT_DATABASE_URL`: استخدم رابط **Neon المباشر** (بدون `-pooler`).
+5. بعد النشر افتح `https://SERVICE-NAME.onrender.com/healthz` — المتوقع `{"status":"ok"}`.
 
 ## 5) ملف الأسرار
 
-`render-secrets.env` يظل **خارج GitHub تمامًا**: لا يُرفع مع المشروع ولا يوضع داخل مجلد الرفع. تُنسخ قيم منه إلى لوحة Render فقط.
+`render-secrets.env` يظل **خارج GitHub تمامًا**: لا يُرفع مع المشروع، ولا يوضع داخل مجلد الرفع. تُنسخ قيم منه إلى لوحة Render فقط.
