@@ -7,7 +7,15 @@ from __future__ import annotations
 
 import os
 import sys
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from pathlib import Path
+
+# The launcher runs as a script (python deploy/free-demo/start.py), so the repo
+# root is not on sys.path yet. Add it to reuse the app's Neon env loader.
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.neon_env import load_neon_env, normalize_database_url  # noqa: E402,F401
 
 REQUIRED = (
     "TT_DATABASE_URL",
@@ -21,56 +29,16 @@ REQUIRED = (
     "TT_VAPID_PRIVATE_KEY",
 )
 
-# These libpq/Neon options are not valid asyncpg.connect() keyword arguments.
-# channel_binding is advertised by Neon but unsupported by asyncpg; dropping it
-# is safe for the direct endpoint. The pooled endpoint needs options=endpoint,
-# so we fail closed on that rather than silently breaking pooled connections.
-DROPPED_QUERY = {"channel_binding"}
-UNSUPPORTED_QUERY = {
-    "options", "sslcert", "sslkey", "sslrootcert",
-    "sslcrl", "sslpassword", "sslnegotiation",
-}
-SSLMODES = {"disable", "allow", "prefer", "require", "verify-ca", "verify-full"}
-
-
-def normalize_database_url(raw: str) -> str:
-    """Convert a Neon/libpq URL to the form expected by SQLAlchemy asyncpg."""
-    raw = raw.strip()
-    if raw.startswith("postgres://"):
-        raw = "postgresql://" + raw[len("postgres://"):]
-    if raw.startswith("postgresql://"):
-        raw = "postgresql+asyncpg://" + raw[len("postgresql://"):]
-    if not raw.startswith("postgresql+asyncpg://"):
-        raise ValueError("TT_DATABASE_URL must be a PostgreSQL URL")
-
-    parts = urlsplit(raw)
-    if not parts.hostname or not parts.path or parts.path == "/":
-        raise ValueError("TT_DATABASE_URL must include host and database name")
-
-    query: list[tuple[str, str]] = []
-    sslmode = None
-    for key, value in parse_qsl(parts.query, keep_blank_values=True):
-        if key == "sslmode":
-            sslmode = value
-            continue
-        if key in DROPPED_QUERY:
-            continue
-        if key in UNSUPPORTED_QUERY:
-            raise ValueError(
-                f"unsupported database URL option: {key}; use the Neon direct connection string"
-            )
-        query.append((key, value))
-
-    if sslmode is not None:
-        if sslmode not in SSLMODES:
-            raise ValueError("invalid sslmode in TT_DATABASE_URL")
-        if not any(key == "ssl" for key, _ in query):
-            query.append(("ssl", sslmode))
-
-    return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
-
 
 def main() -> int:
+    # Pick up Neon CLI output (.env / .env.local) when running locally.
+    # On Render the values come from the dashboard and take precedence.
+    try:
+        load_neon_env(ROOT)
+    except ValueError as exc:
+        print(f"free-demo: {exc}", file=sys.stderr)
+        return 2
+
     missing = [name for name in REQUIRED if not os.environ.get(name)]
     if missing:
         print("free-demo: missing environment variables: " + ", ".join(missing), file=sys.stderr)

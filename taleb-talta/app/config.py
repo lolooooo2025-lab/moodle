@@ -15,6 +15,13 @@ APP_DIR = BASE_DIR / "app"
 STORAGE_DIR = BASE_DIR / "storage"                          # uploads, NOT web-servable
 STORAGE_DIR.mkdir(exist_ok=True)
 
+# Neon CLI output: `.env` / `.env.local` at the project root. Real environment
+# variables win; DATABASE_URL_UNPOOLED is mapped onto TT_DATABASE_URL.
+# See app/neon_env.py. Values are never logged.
+from app.neon_env import load_neon_env as _load_neon_env       # noqa: E402
+
+NEON_ENV_KEYS = _load_neon_env(BASE_DIR)
+
 # --- Private local settings ------------------------------------------------
 SECRET_FILE = Path(os.environ.get("TT_SECRETS_FILE", str(BASE_DIR / "config" / "secrets.env")))
 

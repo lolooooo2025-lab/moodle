@@ -15,6 +15,7 @@ run() {
 }
 
 echo "=== STATIC CHECKERS ==="
+run tools/check_neon_env.py
 run tools/check_i18n.py
 run tools/check_served_secrets.py
 run tools/check_fonts.py
