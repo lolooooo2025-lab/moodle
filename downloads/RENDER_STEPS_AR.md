@@ -118,6 +118,59 @@ Render هيطلب منك 4 قيم بس (الباقي متولّد تلقائيً
 
 ---
 
+## لو Render طلب بطاقة بنكية
+
+الخطة المجانية **لا تحتاج بطاقة**. ظهور شاشة البطاقة معناه إن خطة مدفوعة اتحددت.
+
+1. في شاشة إنشاء الخدمة، قسم **Instance Type**: اختار **Free — $0/month** (أول اختيار في القائمة).
+2. تأكد إن نوع الخدمة **Web Service** — الأنواع التالية **ليس لها خطة مجانية**:
+   Background Worker / Cron Job / Private Service.
+3. تأكد إن خطة الـworkspace **Hobby ($0)**، مش Pro.
+
+### إنشاء الخدمة يدويًا (بدون Blueprint)
+
+لو الـBlueprint عرض عليك خطة مدفوعة، اعمل الخدمة يدويًا:
+
+**New +** ← **Web Service** ← اختر مستودع `Taleb-Talta-V3`، واملأ:
+
+| الحقل | القيمة |
+|---|---|
+| Name | `taleb-talta` |
+| Region | Frankfurt (EU Central) |
+| Branch | `main` |
+| Root Directory | **اتركه فارغًا** |
+| Runtime | Python 3 |
+| Build Command | `pip install -r requirements.lock.txt` |
+| Start Command | `python deploy/free-demo/start.py` |
+| Instance Type | **Free — $0/month** |
+
+وبعدين في **Environment Variables** ضيف:
+
+| Key | Value |
+|---|---|
+| `PYTHON_VERSION` | `3.11.2` |
+| `TT_DATABASE_URL` | رابط Neon المباشر |
+| `TT_OWNER_PHONE` | رقمك المصري (11 رقم) |
+| `TT_OWNER_PASSWORD` | باسورد المالك |
+| `TT_VAPID_SUBJECT` | `mailto:بريدك@example.com` |
+| `TT_PASSWORD_PEPPER` | اضغط **Generate** |
+| `TT_SESSION_SECRET` | اضغط **Generate** |
+| `TT_CRON_TOKEN` | اضغط **Generate** |
+| `TT_STREAM_SECRET` | اضغط **Generate** |
+| `TT_VAPID_PRIVATE_KEY` | اضغط **Generate** |
+| `TT_DEMO_MODE` | `1` |
+| `TT_COOKIE_SECURE` | `1` |
+| `TT_DEBUG` | `0` |
+| `TT_ALLOW_FRAMING` | `0` |
+| `TT_DB_POOL_SIZE` | `2` |
+| `TT_DB_MAX_OVERFLOW` | `2` |
+
+> زر **Generate** بيولّد قيمة عشوائية قوية، والتطبيق بيشتق منها مفاتيح Push صالحة — فمش محتاج تكتب قيم يدويًا.
+
+بعد النشر: **Settings** ← **Health Check Path** = `/healthz`.
+
+---
+
 ## مشاكل شائعة
 
 | المشكلة | السبب / الحل |
