@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="breadcrumb"><a href="/forum">{{ t('forum.back') }}</a></div>
+<div class="page-head"><div><h1 id="thread-title">{{ t('community.loading') }}</h1><p id="thread-meta" class="muted"></p></div><span id="thread-state" class="badge" hidden>{{ t('forum.locked') }}</span></div>
+{% include "community/disclaimer.html" %}
+<div class="row mb-2">
+  <button id="subscribe-btn" class="btn btn-ghost btn-sm">{{ t('forum.subscribe') }}</button>
+  <button id="lock-btn" class="btn btn-ghost btn-sm" hidden>{{ t('forum.lock') }}</button>
+  <button id="refresh-thread" class="btn btn-ghost btn-sm">{{ t('community.refresh') }}</button>
+  {% if can_moderate is defined and can_moderate %}<a href="/admin/moderation" class="btn btn-ghost btn-sm">{{ t('nav.moderation') }}</a>{% endif %}
+</div>
+<section id="thread-posts" class="stack" aria-live="polite"></section>
+<section id="reply-panel" class="card mt-2" hidden>
+  <h2 id="reply-heading">{{ t('forum.reply') }}</h2>
+  <p id="restriction-notice" class="alert alert-warning" hidden>{{ t('chat.restriction_notice') }}</p>
+  <form id="reply-form" class="stack">
+    <div class="field"><label for="reply-body">{{ t('forum.reply_ph') }}</label><textarea id="reply-body" rows="4" maxlength="4000" required></textarea></div>
+    <div class="row"><button type="submit" class="btn btn-primary">{{ t('forum.send_reply') }}</button><button type="button" id="cancel-reply" class="btn btn-ghost" hidden>{{ t('community.cancel') }}</button></div>
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  TT.page = { threadId: {{ thread_id }}, userId: {{ user_id }} };
+  TT.labels = {
+    by: "{{ t('community.by') }}", reply: "{{ t('forum.reply') }}", replyTo: "{{ t('forum.reply_to') }}",
+    subscribe: "{{ t('forum.subscribe') }}", unsubscribe: "{{ t('forum.unsubscribe') }}",
+    lock: "{{ t('forum.lock') }}", unlock: "{{ t('forum.unlock') }}", locked: "{{ t('forum.locked') }}",
+    question: "{{ t('forum.question') }}", backExam: "{{ t('exam.back_to_exams') }}",
+    report: "{{ t('community.report') }}", reportReason: "{{ t('community.report_reason') }}",
+    reportPh: "{{ t('community.report_ph') }}", cancel: "{{ t('community.cancel') }}", close: "{{ t('community.close') }}",
+    generic: "{{ t('err.generic') }}", empty: "{{ t('community.empty') }}"
+  };
+</script>
+<script src="/static/js/community.js" defer></script>
+<script src="/static/js/thread.js" defer></script>
+{% endblock %}

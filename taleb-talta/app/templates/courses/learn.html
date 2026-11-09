@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="player">
+  <div class="breadcrumb">
+    <a href="/courses">{{ t('nav.courses') }}</a><span class="sep">/</span>
+    <a id="crumb-course" href="#"></a><span class="sep">/</span><span id="crumb-lesson"></span>
+  </div>
+  <div class="card mb-2">
+    <h1 id="lesson-title" class="mb-1"></h1>
+    <div class="progress-label"><span>{{ t('lesson.progress') }}</span><span id="progress-pct">0%</span></div>
+    <div class="progress"><span id="progress-bar"></span></div>
+  </div>
+  <div id="items"></div>
+  <div id="items-empty" class="empty-state card" hidden>
+    <div class="empty-icon">{{ icons.icon('file', 32) }}</div>
+    <p class="muted">{{ t('lesson.no_items') }}</p>
+  </div>
+  <div class="player-nav">
+    <a id="back-course" class="btn btn-ghost" href="#">{{ icons.icon('arrow-right', 18) }} {{ t('lesson.back_to_course') }}</a>
+    <button id="finish-btn" class="btn btn-primary">{{ icons.icon('check', 18) }} {{ t('lesson.mark_done') }}</button>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.page = { lessonId: {{ lesson_id }} };
+  TT.labels = {
+    check: "{{ t('lesson.check_answer') }}", openFile: "{{ t('lesson.open_file') }}",
+    visitLink: "{{ t('lesson.visit_link') }}", completed: "{{ t('lesson.completed') }}",
+    markDone: "{{ t('lesson.mark_done') }}", generic: "{{ t('err.generic') }}",
+    text: "{{ t('lesson.item_text') }}", file: "{{ t('lesson.item_file') }}",
+    link: "{{ t('lesson.item_link') }}", question: "{{ t('lesson.item_question') }}",
+    addItem: "{{ t('lesson.add_item') }}", itemType: "{{ t('lesson.item_type') }}",
+    itemTitle: "{{ t('lesson.item_title') }}", itemBody: "{{ t('lesson.item_body') }}",
+    itemUrl: "{{ t('lesson.item_url') }}", itemFile: "{{ t('lesson.item_file_upload') }}",
+    qOptions: "{{ t('lesson.question_options') }}", qCorrect: "{{ t('lesson.question_correct') }}",
+    addContent: "{{ t('lesson.add_content') }}"
+  };
+</script>
+<script src="/static/js/learn.js" defer></script>
+{% endblock %}

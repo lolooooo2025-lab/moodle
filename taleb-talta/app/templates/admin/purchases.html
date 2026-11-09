@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('admin.purchases') }}</h1><span class="badge badge-pending" id="pending-count"></span></div>
+<p class="muted">{{ t('buy.admin_desc') }}</p>
+<div class="row mb-1"><label for="purchase-filter">{{ t('buy.status') }}</label><select id="purchase-filter"><option value="">{{ t('misc.all') }}</option><option value="pending">{{ t('buy.pending') }}</option><option value="confirmed">{{ t('buy.confirmed') }}</option><option value="rejected">{{ t('buy.rejected') }}</option><option value="cancelled">{{ t('buy.cancelled') }}</option></select></div>
+<div class="card table-wrap"><table class="table"><thead><tr><th>#</th><th>{{ t('buy.student') }}</th><th>{{ t('buy.course') }}</th><th>{{ t('buy.lesson') }}</th><th>{{ t('buy.amount') }}</th><th>{{ t('buy.reference_short') }}</th><th>{{ t('buy.status') }}</th><th></th></tr></thead><tbody id="purchases-body"></tbody></table></div>
+<div class="row mt-1"><button class="btn btn-ghost btn-sm" id="purchase-prev">{{ t('misc.prev') }}</button><button class="btn btn-ghost btn-sm" id="purchase-next">{{ t('misc.next') }}</button></div>
+<dialog id="review-dialog" class="community-dialog"><h2>{{ t('buy.review') }}</h2><p id="review-summary" class="muted"></p><form id="review-form"><div class="field"><label for="review-note">{{ t('buy.review_note') }}</label><textarea id="review-note" maxlength="1000"></textarea></div><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button type="button" class="btn btn-primary" id="confirm-purchase">{{ t('buy.confirm_admin') }}</button><button type="button" class="btn btn-danger" id="reject-purchase">{{ t('buy.reject') }}</button><button type="button" class="btn btn-ghost" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+{% endblock %}
+{% block scripts %}<script src="/static/js/admin-purchases.js" defer></script>{% endblock %}

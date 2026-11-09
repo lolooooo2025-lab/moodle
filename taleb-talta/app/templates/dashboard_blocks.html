@@ -1,0 +1,27 @@
+{% macro render_block(key, my_courses, digests, t, icons) -%}
+{% if key == 'courses' and my_courses %}
+<div class="page-head"><h2>{{ t('dashboard.my_courses') }}</h2><a href="/courses" class="btn btn-ghost btn-sm">{{ t('dashboard.all_courses') }}</a></div>
+<div class="grid grid-3 mb-3">
+  {% for c in my_courses %}
+  <a class="card course-card" href="/courses/{{ c.id }}">
+    <div class="course-meta"><span class="chip">{{ c.category_name }}</span>{% if c.division_name %}<span class="badge">{{ c.division_name }}</span>{% endif %}</div>
+    <h3>{{ c.title }}</h3>
+    <div><div class="progress-label"><span>{{ t('course.progress') }}</span><span>{{ c.progress }}%</span></div>
+    <div class="progress"><span data-progress="{{ c.progress }}"></span></div></div>
+    <span class="btn btn-primary btn-sm">{{ t('course.continue') }} {{ icons.icon('arrow-left', 16) }}</span>
+  </a>
+  {% endfor %}
+</div>
+{% elif key in ['courses_link', 'library', 'exams', 'forum', 'chat', 'profile'] %}
+{% set mapping = {'courses_link': ('book', 'nav.courses', 'dashboard.courses_desc', '/courses', ''), 'library': ('library', 'nav.library', 'dashboard.library_desc', '/library', 'tile-secondary'), 'exams': ('exam', 'nav.exams', 'dashboard.exams_desc', '/exams', 'tile-accent'), 'forum': ('users', 'nav.forum', 'dashboard.forum_desc', '/forum', ''), 'chat': ('chat', 'nav.messages', 'dashboard.chat_desc', '/chat', ''), 'profile': ('user', 'nav.profile', 'dashboard.profile_desc', '/profile', 'tile-accent')} %}
+{% set m = mapping[key] %}
+<a class="card tile {{ m[4] }}" href="{{ m[3] }}"><span class="tile-icon">{{ icons.icon(m[0]) }}</span><span class="tile-label">{{ t(m[1]) }}</span><span class="tile-desc">{{ t(m[2]) }}</span></a>
+{% elif key == 'digest' %}
+<div class="card dashboard-digest">
+  <h2>{{ t('dashboard.digest') }}</h2>
+  {% if digests %}
+  <ul class="digest-list">{% for d in digests %}<li><a href="/forum">{{ t('dashboard.digest_posts', count=d.payload_json.get('posts', 0)) }}</a> <span class="muted" dir="ltr">{{ d.period_date }}</span></li>{% endfor %}</ul>
+  {% else %}<p class="muted">{{ t('dashboard.digest_empty') }}</p>{% endif %}
+</div>
+{% endif %}
+{%- endmacro %}

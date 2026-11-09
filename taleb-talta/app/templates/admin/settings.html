@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<h1>{{ t('admin.settings') }}</h1>
+<div class="tabs" role="tablist">
+  <button class="tab active" data-settings-tab="general" role="tab">{{ t('settings.general') }}</button>
+  <button class="tab" data-settings-tab="fields" role="tab">{{ t('customfield.title') }}</button>
+  <button class="tab" data-settings-tab="dashboard" role="tab">{{ t('dashboard.builder') }}</button>
+  <button class="tab" data-settings-tab="themes" role="tab">{{ t('theme.designer') }}</button>
+  <button class="tab" data-settings-tab="menus" role="tab">{{ t('menu.builder') }}</button>
+</div>
+<section id="settings-general" class="settings-panel">
+  <div class="grid grid-2">
+    <form id="general-form" class="card">
+      <h2>{{ t('settings.general') }}</h2>
+      <div class="field"><label for="site-name">{{ t('settings.site_name') }}</label><input id="site-name" name="site.name" maxlength="160"></div>
+      <div class="field"><label for="contact-phone">{{ t('settings.contact_phone') }}</label><input id="contact-phone" name="site.contact_phone" dir="ltr" inputmode="tel"></div>
+      <div class="field"><label for="contact-message">{{ t('settings.contact_message') }}</label><textarea id="contact-message" name="site.contact_message" rows="3" maxlength="1000"></textarea></div>
+      <label class="check-row"><input type="checkbox" name="site.registration_enabled"> {{ t('settings.registration_enabled') }}</label>
+      <label class="check-row"><input type="checkbox" name="site.maintenance"> {{ t('settings.maintenance') }}</label>
+      <p class="muted">{{ t('settings.maintenance_desc') }}</p>
+      <div class="form-error" role="alert" hidden></div><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button>
+    </form>
+    <div class="card"><h2>{{ t('settings.branding') }}</h2><img id="logo-preview" src="/branding/logo" alt="{{ t('app.logo_alt') }}" class="logo-preview"><form id="logo-form"><div class="field"><label for="logo-file">{{ t('settings.logo') }}</label><input id="logo-file" type="file" name="file" accept="image/png,image/jpeg,image/webp"></div><p class="muted">{{ t('settings.logo_hint') }}</p><div class="form-error" role="alert" hidden></div><button class="btn btn-primary" type="submit">{{ t('misc.upload') }}</button></form></div>
+  </div>
+</section>
+<section id="settings-fields" class="settings-panel" hidden>
+  <div class="page-head"><h2>{{ t('customfield.title') }}</h2><button class="btn btn-primary btn-sm" id="add-field">{{ t('customfield.add') }}</button></div>
+  <p class="muted">{{ t('customfield.desc') }}</p>
+  <div class="card table-wrap"><table class="table"><thead><tr><th>{{ t('customfield.label') }}</th><th>{{ t('customfield.entity') }}</th><th>{{ t('customfield.type') }}</th><th>{{ t('customfield.required') }}</th><th>{{ t('buy.status') }}</th><th></th></tr></thead><tbody id="fields-body"></tbody></table></div>
+</section>
+<section id="settings-dashboard" class="settings-panel" hidden>
+  <div class="card"><h2>{{ t('dashboard.builder') }}</h2><p class="muted">{{ t('dashboard.builder_desc') }}</p><div class="field"><label for="dashboard-role">{{ t('admin.role') }}</label><select id="dashboard-role">{% for r in ['owner','admin','moderator','teacher','student','parent'] %}<option value="{{ r }}" {% if r == 'student' %}selected{% endif %}>{{ t('role.' + r) }}</option>{% endfor %}</select></div><div id="default-block-list" class="builder-list"></div><button class="btn btn-primary" id="save-default-blocks">{{ t('nav.save') }}</button></div>
+</section>
+<section id="settings-themes" class="settings-panel" hidden>
+  <div class="grid grid-2">
+    <form id="theme-form" class="card"><h2>{{ t('theme.create') }}</h2><p class="muted">{{ t('theme.palette_hint') }}</p>
+      <div class="field"><label for="theme-name">{{ t('theme.name') }}</label><input id="theme-name" name="name" required maxlength="120"></div>
+      <div class="field"><label for="theme-base">{{ t('theme.base') }}</label><select id="theme-base" name="base_theme"><option value="light">{{ t('theme.light') }}</option><option value="neutral">{{ t('theme.neutral') }}</option><option value="sky">{{ t('theme.sky') }}</option></select></div>
+      <div class="field"><label for="theme-primary">{{ t('theme.primary') }}</label><select id="theme-primary" name="primary"><option value="#0848A4">{{ t('theme.blue') }}</option><option value="#113B77">{{ t('theme.deep_blue') }}</option><option value="#0A1831">{{ t('theme.navy') }}</option></select></div>
+      <div class="field"><label for="theme-secondary">{{ t('theme.secondary') }}</label><select id="theme-secondary" name="secondary"><option value="#2FBCF9">{{ t('theme.cyan') }}</option><option value="#F8B43C">{{ t('theme.amber') }}</option><option value="#0848A4">{{ t('theme.blue') }}</option></select></div>
+      <div class="field"><label for="theme-accent">{{ t('theme.accent') }}</label><select id="theme-accent" name="accent"><option value="#F8B43C">{{ t('theme.amber') }}</option><option value="#2FBCF9">{{ t('theme.cyan') }}</option></select></div>
+      <div class="field"><label for="theme-radius">{{ t('theme.radius') }}</label><input id="theme-radius" name="radius" type="number" min="8" max="24" value="16"></div>
+      <div class="field"><label for="theme-density">{{ t('theme.density') }}</label><select id="theme-density" name="density"><option value="comfortable">{{ t('theme.comfortable') }}</option><option value="compact">{{ t('theme.compact') }}</option></select></div>
+      <div class="form-error" role="alert" hidden></div><button class="btn btn-primary" type="submit">{{ t('nav.add') }}</button>
+    </form>
+    <div class="card"><h2>{{ t('theme.presets') }}</h2><div id="theme-list" class="builder-list"></div><h3>{{ t('theme.role_override') }}</h3><form id="role-theme-form" class="inline-form"><select name="role" aria-label="{{ t('admin.role') }}">{% for r in ['owner','admin','moderator','teacher','student','parent'] %}<option value="{{ r }}">{{ t('role.' + r) }}</option>{% endfor %}</select><select name="theme_key" id="role-theme-key" aria-label="{{ t('settings.theme') }}"></select><button class="btn btn-primary btn-sm" type="submit">{{ t('nav.save') }}</button></form></div>
+  </div>
+</section>
+<section id="settings-menus" class="settings-panel" hidden>
+  <div class="page-head"><h2>{{ t('menu.builder') }}</h2><button class="btn btn-primary btn-sm" id="add-menu">{{ t('menu.add') }}</button></div>
+  <p class="muted">{{ t('menu.desc') }}</p>
+  <div class="card table-wrap"><table class="table"><thead><tr><th>{{ t('menu.label') }}</th><th>{{ t('menu.url') }}</th><th>{{ t('admin.role') }}</th><th>{{ t('menu.order') }}</th><th>{{ t('buy.status') }}</th><th></th></tr></thead><tbody id="menus-body"></tbody></table></div>
+</section>
+<dialog id="field-dialog" class="community-dialog"><h2 id="field-dialog-title">{{ t('customfield.add') }}</h2><form id="field-form"><input type="hidden" name="id"><div class="field"><label for="field-label">{{ t('customfield.label') }}</label><input id="field-label" name="label" required maxlength="120"></div><div class="field"><label for="field-entity">{{ t('customfield.entity') }}</label><select id="field-entity" name="applies_to"><option value="user">{{ t('role.student') }}</option><option value="course">{{ t('nav.courses') }}</option></select></div><div class="field"><label for="field-machine">{{ t('customfield.machine_name') }}</label><input id="field-machine" name="machine_name" dir="ltr" pattern="[a-z][a-z0-9_]{1,59}" required></div><div class="field"><label for="field-type">{{ t('customfield.type') }}</label><select id="field-type" name="field_type"><option value="text">{{ t('customfield.text') }}</option><option value="number">{{ t('customfield.number') }}</option><option value="select">{{ t('customfield.select') }}</option><option value="checkbox">{{ t('customfield.checkbox') }}</option></select></div><div class="field" id="field-options-wrap" hidden><label for="field-options">{{ t('customfield.options') }}</label><textarea id="field-options" name="options" rows="3"></textarea><span class="muted">{{ t('customfield.options_hint') }}</span></div><div class="field"><label for="field-order">{{ t('menu.order') }}</label><input id="field-order" name="sort_order" type="number" min="0" max="1000" value="0"></div><label class="check-row"><input type="checkbox" name="required"> {{ t('customfield.required') }}</label><label class="check-row"><input type="checkbox" name="enabled" checked> {{ t('misc.enabled') }}</label><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+<dialog id="menu-dialog" class="community-dialog"><h2>{{ t('menu.edit') }}</h2><form id="menu-form"><input type="hidden" name="id"><div class="field"><label for="menu-label">{{ t('menu.label') }}</label><input id="menu-label" name="label" required maxlength="120"></div><div class="field"><label for="menu-url">{{ t('menu.url') }}</label><input id="menu-url" name="url" dir="ltr" required placeholder="/courses"></div><div class="field"><label for="menu-icon">{{ t('menu.icon') }}</label><select id="menu-icon" name="icon"><option value="book">{{ t('nav.courses') }}</option><option value="library">{{ t('nav.library') }}</option><option value="exam">{{ t('nav.exams') }}</option><option value="chat">{{ t('nav.messages') }}</option><option value="users">{{ t('nav.forum') }}</option><option value="bell">{{ t('nav.notifications') }}</option><option value="home">{{ t('nav.dashboard') }}</option></select></div><div class="field"><label for="menu-role">{{ t('admin.role') }}</label><select id="menu-role" name="role"><option value="">{{ t('misc.all') }}</option>{% for r in ['owner','admin','moderator','teacher','student','parent'] %}<option value="{{ r }}">{{ t('role.' + r) }}</option>{% endfor %}</select></div><div class="field"><label for="menu-order">{{ t('menu.order') }}</label><input id="menu-order" name="order" type="number" min="0" max="1000" value="0"></div><label class="check-row"><input type="checkbox" name="enabled" checked> {{ t('misc.enabled') }}</label><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+{% endblock %}
+{% block scripts %}<script src="/static/js/admin-settings.js" defer></script>{% endblock %}

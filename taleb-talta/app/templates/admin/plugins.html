@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<h1>{{ t('admin.plugins') }}</h1>
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ t('admin.plugins') }}</th>
+        <th>{{ t('buy.status') }}</th>
+        <th>{{ t('misc.version') }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in plugins %}
+      <tr data-component="{{ p.component }}">
+        <td><strong>{{ t(p.component + '.title') }}</strong><br>
+            <span class="muted"><code dir="ltr">{{ p.component }}</code> · {{ p.type }}</span></td>
+        <td><span class="badge badge-{{ p.status }}">{{ t('admin.plugin_' + p.status) if p.status in ['enabled','disabled'] else p.status }}</span></td>
+        <td dir="ltr">{{ p.installed_version }} / {{ p.disk_version }}</td>
+        <td class="actions">
+          {% if p.status == 'present' %}
+            <button class="btn btn-sm btn-primary" data-plugin-action="install">{{ t('admin.install_plugin') }}</button>
+          {% elif p.status == 'installed' or p.status == 'disabled' %}
+            <button class="btn btn-sm btn-primary" data-plugin-action="enable">{{ t('admin.plugin_enabled') }}</button>
+          {% elif p.status == 'enabled' %}
+            <button class="btn btn-sm btn-ghost" data-plugin-action="disable">{{ t('admin.plugin_disabled') }}</button>
+          {% endif %}
+          {% if p.installed_version and p.disk_version > p.installed_version %}
+            <button class="btn btn-sm btn-primary" data-plugin-action="upgrade">{{ t('admin.upgrade_plugin') }}</button>
+          {% endif %}
+          {% if p.status != 'present' %}
+            <button class="btn btn-sm btn-ghost" data-plugin-settings="{{ p.component }}">{{ t('admin.plugin_settings') }}</button>
+            <button class="btn btn-sm btn-danger" data-plugin-action="uninstall">{{ t('admin.uninstall_plugin') }}</button>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<dialog id="plugin-settings-dialog" class="community-dialog"><h2 id="plugin-settings-title">{{ t('admin.plugin_settings') }}</h2><form id="plugin-settings-form"><div id="plugin-settings-fields"></div><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+{% endblock %}
+{% block scripts %}<script src="/static/js/plugin-settings.js" defer></script>{% endblock %}

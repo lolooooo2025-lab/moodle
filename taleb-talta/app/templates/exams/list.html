@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ t('exam.exams') }}</h1>
+  {% if can_edit %}
+  <a href="/admin/exams" class="btn btn-primary">{{ icons.icon('plus', 18) }} {{ t('exam.manage') }}</a>
+  {% endif %}
+</div>
+<div class="row mb-2">
+  <div class="field m-0 min-w-240">
+    <label for="exam-course">{{ t('exam.select_course') }}</label>
+    <select id="exam-course"></select>
+  </div>
+</div>
+<div id="exams-grid" class="grid grid-3" aria-live="polite"></div>
+<div id="exams-empty" class="empty-state card" hidden>
+  <div class="empty-icon">{{ icons.icon('exam', 32) }}</div>
+  <p class="muted">{{ t('exam.empty') }}</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.labels = {
+    start: "{{ t('exam.start') }}", questions: "{{ t('exam.question_count') }}",
+    time: "{{ t('exam.time_limit') }}", minutes: "{{ t('time.minutes') }}",
+    attempts: "{{ t('exam.attempts_used') }}", best: "{{ t('exam.best_score') }}",
+    review: "{{ t('exam.review') }}", gradebook: "{{ t('exam.view_gradebook') }}",
+    pickCourse: "{{ t('exam.select_course') }}", generic: "{{ t('err.generic') }}",
+    untimed: "{{ t('exam.time_limit_minutes') }}"
+  };
+</script>
+<script src="/static/js/exams-list.js" defer></script>
+{% endblock %}

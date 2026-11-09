@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="{{ theme }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="sesskey" content="{{ sesskey }}">
+  <title>{% block title %}{{ page_title }} · {{ site_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="icon" href="{{ logo_url|default('/static/logo.png') }}" type="image/png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0848A4">
+</head>
+<body class="density-{{ density|default('comfortable') }}">
+  <a class="skip-link" href="#main">{{ t('nav.menu') }}</a>
+  {% if demo_mode %}
+  <div class="demo-banner" role="status">{{ t('demo.banner') }}</div>
+  {% endif %}
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <img src="{{ logo_url|default('/static/logo.png') }}" alt="{{ site_name }}" class="brand-logo">
+        <span class="brand-name">{{ site_name }}</span>
+      </a>
+      {% if user %}
+      <nav class="mainnav" aria-label="{{ t('nav.menu') }}">
+        {% for item in nav %}
+          <a href="{{ item.url }}" class="navlink">{{ item.label }}</a>
+        {% endfor %}
+      </nav>
+      <div class="topbar-actions">
+        <label class="theme-switch">
+          <span class="visually-hidden">{{ t('settings.theme') }}</span>
+          <select id="theme-select" aria-label="{{ t('settings.theme') }}">
+            {% for th in themes %}
+              <option value="{{ th.key }}" {% if th.key == theme %}selected{% endif %}>{{ th.label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <a href="/notifications" class="btn btn-ghost notif-link" aria-label="{{ t('nav.notifications') }}">{{ t('nav.notifications') }} <span id="notif-badge" class="badge badge-approved" hidden></span></a>
+        <a href="/profile" class="userchip">{{ user.name }}</a>
+        <button type="button" id="logout-btn" class="btn btn-ghost">{{ t('nav.logout') }}</button>
+      </div>
+      {% else %}
+      <div class="topbar-actions">
+        <a href="/login" class="btn btn-ghost">{{ t('nav.login') }}</a>
+        <a href="/register" class="btn btn-primary">{{ t('nav.register') }}</a>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>{{ site_name }}</span>
+      <span class="muted">{{ t('misc.version') }} 1.0</span>
+    </div>
+  </footer>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+  <script nonce="{{ nonce }}">
+    window.TT = { sesskey: document.querySelector('meta[name="sesskey"]').content };
+  </script>
+  <script src="/i18n.js" defer></script>
+  <script src="/static/js/app.js" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

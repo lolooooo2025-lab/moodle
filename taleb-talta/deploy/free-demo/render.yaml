@@ -1,0 +1,49 @@
+# Taleb Talta — temporary free demo (Render free web + Neon free Postgres).
+# Place this file at the repository root when deploying (the demo ZIP already does).
+# NOT for production: Render free has ephemeral disk, sleeps when idle, and no
+# free background worker. See FREE_DEMO.md.
+services:
+  - type: web
+    name: taleb-talta-demo
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements.lock.txt
+    startCommand: python deploy/free-demo/start.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.2"
+      - key: TT_DEMO_MODE
+        value: "1"
+      - key: TT_COOKIE_SECURE
+        value: "1"
+      - key: TT_DEBUG
+        value: "0"
+      - key: TT_ALLOW_FRAMING
+        value: "0"
+      - key: TT_DB_POOL_SIZE
+        value: "2"
+      - key: TT_DB_MAX_OVERFLOW
+        value: "2"
+      # Fill these in the Render dashboard. Never commit them to Git.
+      - key: TT_DATABASE_URL
+        sync: false
+      - key: TT_OWNER_PHONE
+        sync: false
+      - key: TT_OWNER_PASSWORD
+        sync: false
+      - key: TT_VAPID_SUBJECT
+        sync: false
+      # Render generates and stores these automatically. They are demo-only;
+      # the VPS production checker expects its own 64-hex secrets.
+      - key: TT_PASSWORD_PEPPER
+        generateValue: true
+      - key: TT_SESSION_SECRET
+        generateValue: true
+      - key: TT_CRON_TOKEN
+        generateValue: true
+      - key: TT_STREAM_SECRET
+        generateValue: true
+      - key: TT_VAPID_PRIVATE_KEY
+        generateValue: true

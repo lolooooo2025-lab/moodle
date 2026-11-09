@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('admin.users') }}</h1><span class="muted" id="users-total"></span></div>
+<div class="tabs" role="tablist"><button class="tab active" data-user-tab="users" role="tab">{{ t('admin.users') }}</button><button class="tab" data-user-tab="divisions" role="tab">{{ t('admin.divisions') }}</button></div>
+<section id="users-panel">
+  <form id="user-filters" class="card filter-bar">
+    <div class="field"><label for="user-q">{{ t('misc.search') }}</label><input id="user-q" name="q" type="search"></div>
+    <div class="field"><label for="user-role">{{ t('admin.role') }}</label><select id="user-role" name="role"><option value="">{{ t('misc.all') }}</option>{% for r in ['owner','admin','moderator','teacher','student','parent'] %}<option value="{{ r }}">{{ t('role.' + r) }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="user-status">{{ t('buy.status') }}</label><select id="user-status" name="status"><option value="">{{ t('misc.all') }}</option>{% for s in ['active','pending','suspended','banned'] %}<option value="{{ s }}">{{ t('status.' + s) }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="user-division">{{ t('profile.division') }}</label><select id="user-division" name="division_id"><option value="0">{{ t('misc.all') }}</option>{% for d in divisions %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}</select></div>
+    <button class="btn btn-primary" type="submit">{{ t('misc.filter') }}</button>
+  </form>
+  <div class="card table-wrap"><table class="table table-dense"><thead><tr><th>{{ t('profile.name') }}</th><th>{{ t('profile.phone') }}</th><th>{{ t('admin.role') }}</th><th>{{ t('buy.status') }}</th><th>{{ t('profile.division') }}</th><th></th></tr></thead><tbody id="users-body"></tbody></table></div>
+  <div class="pager"><button class="btn btn-ghost btn-sm" id="users-prev">{{ t('misc.prev') }}</button><span id="users-page"></span><button class="btn btn-ghost btn-sm" id="users-next">{{ t('misc.next') }}</button></div>
+</section>
+<section id="divisions-panel" hidden>
+  <div class="grid grid-2">
+    <form id="division-create" class="card"><h2>{{ t('admin.division_add') }}</h2><div class="field"><label for="division-name">{{ t('profile.division') }}</label><input id="division-name" name="name" required maxlength="120"></div><div class="form-error" role="alert" hidden></div><button class="btn btn-primary" type="submit">{{ t('nav.add') }}</button></form>
+    <div class="card"><h2>{{ t('admin.divisions') }}</h2><ul class="division-list">{% for d in divisions %}<li><span>{{ d.name }}</span><button class="btn btn-ghost btn-sm" data-rename-division="{{ d.id }}" data-name="{{ d.name }}">{{ t('nav.edit') }}</button></li>{% endfor %}</ul></div>
+  </div>
+</section>
+<dialog id="user-dialog" class="community-dialog">
+  <h2>{{ t('admin.user_edit') }}</h2>
+  <form id="user-edit-form">
+    <input type="hidden" name="id">
+    <div class="field"><label for="edit-name">{{ t('profile.name') }}</label><input id="edit-name" name="name" maxlength="160"></div>
+    <div class="field"><label for="edit-phone">{{ t('profile.phone') }}</label><input id="edit-phone" name="phone" dir="ltr" inputmode="tel"></div>
+    <div class="field"><label for="edit-guardian">{{ t('profile.guardian') }}</label><input id="edit-guardian" name="guardian_phone" dir="ltr" inputmode="tel"></div>
+    <div class="field"><label for="edit-role">{{ t('admin.role') }}</label><select id="edit-role" name="role">{% for r in ['owner','admin','moderator','teacher','student','parent'] %}<option value="{{ r }}">{{ t('role.' + r) }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="edit-status">{{ t('buy.status') }}</label><select id="edit-status" name="status">{% for s in ['active','pending','suspended','banned'] %}<option value="{{ s }}">{{ t('status.' + s) }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="edit-division">{{ t('profile.division') }}</label><select id="edit-division" name="division_id"><option value="">{{ t('misc.none') }}</option>{% for d in divisions %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}</select></div>
+    <div id="user-custom-fields"></div>
+    <div class="form-error" role="alert" hidden></div>
+    <div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="/static/js/custom-fields.js" defer></script><script src="/static/js/admin-users.js" defer></script>{% endblock %}

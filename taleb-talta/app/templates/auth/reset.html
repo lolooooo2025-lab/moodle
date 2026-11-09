@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-card card">
+  <h1>{{ t('auth.reset_title') }}</h1>
+  <form id="reset-form" data-api="/api/auth/reset" data-redirect="/login" novalidate>
+    <div class="field">
+      <label for="token">{{ t('auth.reset_btn') }}</label>
+      <input id="token" name="token" type="text" required dir="ltr">
+    </div>
+    <div class="field">
+      <label for="new_password">{{ t('auth.new_password') }}</label>
+      <input id="new_password" name="new_password" type="password" autocomplete="new-password" required>
+    </div>
+    <div class="form-error" role="alert" hidden></div>
+    <button type="submit" class="btn btn-primary btn-block">{{ t('auth.reset_btn') }}</button>
+  </form>
+  <div class="auth-links"><a href="/login">{{ t('nav.back') }}</a></div>
+</div>
+{% endblock %}

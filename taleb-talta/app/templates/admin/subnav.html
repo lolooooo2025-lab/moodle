@@ -1,0 +1,16 @@
+<nav class="admin-subnav" aria-label="{{ t('admin.tree') }}">
+  <a href="/admin">{{ t('admin.dashboard') }}</a>
+  <a href="/admin/users">{{ t('admin.users') }}</a>
+  <a href="/admin/reports">{{ t('admin.reports') }}</a>
+  {% if user.role in ['owner', 'admin'] %}
+  <a href="/admin/tasks">{{ t('admin.tasks') }}</a>
+  <a href="/admin/plugins">{{ t('admin.plugins') }}</a>
+  <a href="/admin/settings">{{ t('admin.settings') }}</a>
+  <a href="/admin/audit">{{ t('admin.audit') }}</a>
+  <a href="/admin/purchases">{{ t('admin.purchases') }}</a>
+  <a href="/admin/broadcasts">{{ t('admin.broadcasts') }}</a>
+  <a href="/admin/campaigns">{{ t('admin.campaigns') }}</a>
+  <a href="/admin/live">{{ t('admin.live') }}</a>
+  {% endif %}
+  {% if user.role == 'owner' %}<a href="/admin/security">{{ t('admin.security') }}</a><a href="/admin/backups">{{ t('backup.title') }}</a>{% endif %}
+</nav>

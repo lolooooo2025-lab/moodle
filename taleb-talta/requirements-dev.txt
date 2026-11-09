@@ -1,0 +1,6 @@
+-r requirements.txt
+pgserver>=0.1
+playwright>=1.40
+psycopg2-binary>=2.9
+cryptography>=44
+pywebpush>=2.0

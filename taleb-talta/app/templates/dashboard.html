@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% import "dashboard_blocks.html" as blocks_ui %}
+{% block content %}
+<section class="hero">
+  <h1>{{ t('dashboard.greeting', name=user.name) }}</h1>
+  <p>{{ t('dashboard.subtitle') }}</p>
+  <button type="button" class="btn btn-ghost btn-sm" id="customize-dashboard">{{ t('dashboard.customize') }}</button>
+</section>
+{% set tile_keys = ['courses_link', 'library', 'exams', 'forum', 'chat', 'profile'] %}
+{% for b in blocks if b.key == 'courses' %}{{ blocks_ui.render_block(b.key, my_courses, digests, t, icons) }}{% endfor %}
+{% set visible_tiles = blocks | selectattr('key', 'in', tile_keys) | list %}
+{% if visible_tiles %}
+<h2 class="mb-1">{{ t('dashboard.quick_links') }}</h2>
+<div class="grid grid-3">{% for b in visible_tiles %}{{ blocks_ui.render_block(b.key, my_courses, digests, t, icons) }}{% endfor %}</div>
+{% endif %}
+<h2 class="mb-1">{{ t('dashboard.wave5_links') }}</h2>
+<div class="grid grid-3">
+  <a class="card tile" href="/purchases"><strong>{{ t('buy.my_purchases') }}</strong><p class="muted">{{ t('dashboard.purchases_desc') }}</p></a>
+  <a class="card tile tile-secondary" href="/live"><strong>{{ t('nav.live') }}</strong><p class="muted">{{ t('dashboard.live_desc') }}</p></a>
+  <a class="card tile tile-accent" href="/campaigns"><strong>{{ t('nav.campaigns') }}</strong><p class="muted">{{ t('dashboard.campaigns_desc') }}</p></a>
+</div>
+{% for b in blocks if b.key == 'digest' %}{{ blocks_ui.render_block(b.key, my_courses, digests, t, icons) }}{% endfor %}
+<dialog id="dashboard-dialog" class="community-dialog">
+  <h2>{{ t('dashboard.customize') }}</h2>
+  <p class="muted">{{ t('dashboard.customize_desc') }}</p>
+  <div id="dashboard-block-list" class="builder-list"></div>
+  <div class="dialog-actions"><button type="button" class="btn btn-primary" id="save-dashboard">{{ t('nav.save') }}</button><button type="button" class="btn btn-ghost" data-close-dialog>{{ t('nav.cancel') }}</button></div>
+</dialog>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  document.querySelectorAll(".progress > span[data-progress]").forEach(function (el) { el.style.width = el.getAttribute("data-progress") + "%"; });
+</script>
+<script src="/static/js/dashboard.js" defer></script>
+{% endblock %}

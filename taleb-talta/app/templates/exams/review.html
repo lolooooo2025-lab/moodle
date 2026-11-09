@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="breadcrumb"><a href="/exams">{{ t('exam.exams') }}</a> {{ icons.icon('arrow-left', 14) }} <span>{{ t('exam.review') }}</span></div>
+<div class="card mb-2">
+  <div class="spread">
+    <h1 class="m-0">{{ t('exam.result') }}</h1>
+    <span id="review-score" class="chip"></span>
+  </div>
+  <p id="review-status" class="muted small mt-1"></p>
+</div>
+<div id="review-items" aria-live="polite"></div>
+<div class="row mt-2">
+  <a href="/exams" class="btn btn-ghost">{{ icons.icon('arrow-right', 18) }} {{ t('exam.back_to_exams') }}</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.page = { attemptId: {{ attempt_id }} };
+  TT.labels = {
+    score: "{{ t('exam.score') }}", outOf: "{{ t('exam.out_of') }}",
+    correct: "{{ t('exam.correct') }}", incorrect: "{{ t('exam.incorrect') }}",
+    pendingManual: "{{ t('exam.pending_manual') }}", yourAnswer: "{{ t('exam.your_answer') }}",
+    correctWas: "{{ t('exam.correct_was') }}", explanation: "{{ t('exam.explanation') }}",
+    notAnswered: "{{ t('exam.not_answered') }}", discuss: "{{ t('exam.discuss_question') }}",
+    writePost: "{{ t('exam.write_post') }}", post: "{{ t('exam.post') }}",
+    noPosts: "{{ t('exam.no_posts') }}", true: "{{ t('exam.true') }}", false: "{{ t('exam.false') }}",
+    questionN: "{{ t('exam.question_n') }}", points: "{{ t('exam.points') }}",
+    forumDiscuss: "{{ t('forum.discuss_question') }}", report: "{{ t('community.report') }}",
+    reportReason: "{{ t('community.report_reason') }}", reportPh: "{{ t('community.report_ph') }}",
+    cancel: "{{ t('community.cancel') }}", close: "{{ t('community.close') }}",
+    generic: "{{ t('err.generic') }}", manualGrade: "{{ t('exam.manual_grade') }}",
+    awardPoints: "{{ t('exam.award_points') }}", graded: "{{ t('exam.graded') }}"
+  };
+</script>
+<script src="/static/js/community.js" defer></script>
+<script src="/static/js/exam-review.js" defer></script>
+{% endblock %}

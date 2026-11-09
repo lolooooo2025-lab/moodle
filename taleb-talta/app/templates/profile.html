@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('profile.profile') }}</h1>
+<div class="grid grid-2">
+  <div class="card">
+    <h2>{{ t('profile.edit') }}</h2>
+    <form id="profile-form" novalidate>
+      <div class="field">
+        <label for="name">{{ t('profile.name') }}</label>
+        <input id="name" name="name" type="text" value="{{ user.name }}">
+      </div>
+      <div class="field">
+        <label for="title">{{ t('profile.title') }}</label>
+        <input id="title" name="title" type="text" value="{{ user.title }}">
+      </div>
+      <div class="field">
+        <label for="badge">{{ t('profile.badge') }}</label>
+        <input id="badge" name="badge" type="text" value="{{ user.badge }}">
+      </div>
+      <div id="profile-custom-fields"></div>
+      <div class="form-error" role="alert" hidden></div>
+      <button type="submit" class="btn btn-primary">{{ t('nav.save') }}</button>
+    </form>
+  </div>
+  <div class="card">
+    <h2>{{ t('profile.core_locked') }}</h2>
+    <dl class="kv">
+      <dt>{{ t('profile.phone') }}</dt><dd dir="ltr">{{ user.phone }}</dd>
+      <dt>{{ t('profile.guardian') }}</dt><dd dir="ltr">{{ user.guardian_phone }}</dd>
+      <dt>{{ t('profile.division') }}</dt><dd>{{ division_name }}</dd>
+      <dt>{{ t('misc.student') }}</dt><dd>{{ t('role.' + user.role) }}</dd>
+    </dl>
+    <p class="muted">{{ t('profile.core_locked') }}</p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/custom-fields.js" defer></script><script src="/static/js/profile.js" defer></script>{% endblock %}
