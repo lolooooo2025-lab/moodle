@@ -11,12 +11,12 @@
 
 ## قبل النشر على Render
 
-1.اعمل حساب/مشروع على Neon.
+1. اعمل حساب/مشروع على Neon.
 2. خذ **Direct connection string** لقاعدة PostgreSQL.
    - استخدم الرابط المباشر، وليس رابط `-pooler`.
    - الشكل العام: `postgresql://USER:PASSWORD@HOST/DBNAME?sslmode=require`
 3. جهّز قيم المالك:
-   - `TT_OWNER_PHONE`: رقم المالك بصيغة دولية.
+   - `TT_OWNER_PHONE`: رقم موبايل مصري من 11 رقم يبدأ بـ 010 أو 011 أو 012 أو 015 (بدون +20 وبدون مسافات).
    - `TT_OWNER_PASSWORD`: باسورد تجريبي قوي. لا تستخدم الباسورد الضعيف القديم.
    - `TT_VAPID_SUBJECT`: قيمة مثل `mailto:your-email@example.com`.
 

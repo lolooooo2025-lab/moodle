@@ -90,7 +90,7 @@
 ممكن تستخدم خدمة كرون مجانية زي cron-job.org تعمل طلب:
 
 - Method: `POST`
-- URL: `https://SERVICE-NAME.onrender.com/cron/run`
+- URL: `https://SERVICE-NAME.onrender.com/api/cron/run`
 - Header: `X-Cron-Token: <قيمة TT_CRON_TOKEN من Render>`
 - كل 15 دقيقة مثلًا.
 
