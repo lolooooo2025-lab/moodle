@@ -1,0 +1,64 @@
+# Complete Taleb Talta site. Static assets use Netlify's CDN; every dynamic
+# route is handled by the same application through a Netlify Function adapter.
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22.22.3"
+  NPM_FLAGS = "--include=dev"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "zisi"
+
+# Only the HTTP app and the background worker carry the Python runtime.
+[functions.app]
+  included_files = [
+    "app/**",
+    "database/**",
+    "netlify/launch.py",
+    "netlify/server.mjs",
+    "netlify/python-runtime/**",
+    "netlify/python-packages/**",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!app/storage/**",
+    "!app/config/*.env",
+    "!app/config/secrets.env",
+    "!database/*.dump"
+  ]
+
+[functions.worker-background]
+  included_files = [
+    "app/**",
+    "database/**",
+    "netlify/launch.py",
+    "netlify/server.mjs",
+    "netlify/python-runtime/**",
+    "netlify/python-packages/**",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!app/storage/**",
+    "!app/config/*.env",
+    "!app/config/secrets.env",
+    "!database/*.dump"
+  ]
+
+[functions.cron]
+  node_bundler = "none"
+
+[dev]
+  framework = "#custom"
+  command = "node netlify/dev-placeholder.mjs"
+  targetPort = 9999
+  port = 8000
+  autoLaunch = false
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "public, max-age=3600"

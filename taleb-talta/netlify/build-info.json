@@ -1,0 +1,9 @@
+{
+  "name": "Taleb Talta",
+  "mode": "netlify-neon",
+  "python": "3.11.14",
+  "pg_dump": "18.6",
+  "runtime_sha256": "659c2d81a91a346bcba9ad9b44377aa1c6e47cc9f8cfdbffc70a70a1963797e6",
+  "bundle_bytes": 124153968,
+  "built_at": "2026-11-10T21:14:02.872Z"
+}

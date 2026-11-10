@@ -64,3 +64,6 @@ tsconfig.aliases.json
 
 # Ignore the types for AMD code.
 /.types
+
+# Local Netlify folder
+.netlify
