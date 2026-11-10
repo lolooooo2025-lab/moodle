@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><h1>{{ t('buy.my_purchases') }}</h1><a class="btn btn-ghost btn-sm" href="/courses">{{ t('nav.courses') }}</a></div>
+<p class="muted">{{ t('buy.no_gateway') }}</p>
+<div class="card table-wrap"><table class="table"><thead><tr><th>#</th><th>{{ t('buy.course') }}</th><th>{{ t('buy.lesson') }}</th><th>{{ t('buy.amount') }}</th><th>{{ t('buy.status') }}</th><th>{{ t('buy.review_note') }}</th><th></th></tr></thead><tbody id="purchases-body"></tbody></table></div>
+<p id="purchases-empty" class="empty-state card" hidden>{{ t('buy.empty') }}</p>
+{% endblock %}
+{% block scripts %}<script src="/static/js/purchases.js" defer></script>{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head">
+  <h1>{{ t('admin.library_moderation') }}</h1>
+  <a href="/library" class="btn btn-ghost btn-sm">{{ t('nav.library') }}</a>
+</div>
+<div id="pending-list" class="stack" aria-live="polite"></div>
+<div id="pending-empty" class="empty-state card" hidden>
+  <div class="empty-icon">{{ icons.icon('check', 32) }}</div>
+  <p class="muted">{{ t('lib.no_pending') }}</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.labels = {
+    approve: "{{ t('lib.approve') }}", reject: "{{ t('lib.reject') }}",
+    reasonPh: "{{ t('lib.reject_reason_ph') }}", by: "{{ t('lib.uploaded_by') }}",
+    download: "{{ t('lib.download') }}", generic: "{{ t('err.generic') }}",
+    pending: "{{ t('lib.pending') }}"
+  };
+</script>
+<script src="/static/js/admin-library.js" defer></script>
+{% endblock %}

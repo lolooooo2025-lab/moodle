@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><div><h1>{{ t('moderation.title') }}</h1><p class="muted">{{ t('moderation.subtitle') }}</p></div><a href="/forum" class="btn btn-ghost">{{ t('nav.forum') }}</a></div>
+<div class="grid grid-3 mb-2">
+  <div class="card stat-card"><span class="stat-number" id="report-count">0</span><span>{{ t('moderation.pending_reports') }}</span></div>
+  <div class="card stat-card"><span class="stat-number" id="sticker-count">0</span><span>{{ t('moderation.pending_stickers') }}</span></div>
+  <div class="card stat-card"><span class="stat-number" id="restriction-count">0</span><span>{{ t('moderation.restrictions') }}</span></div>
+</div>
+<div class="tabs mb-2" role="tablist" aria-label="{{ t('moderation.title') }}">
+  <button class="tab active" role="tab" aria-selected="true" data-tab="reports">{{ t('moderation.reports') }}</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="stickers">{{ t('chat.stickers') }}</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="dictionary">{{ t('moderation.dictionary') }}</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="restrictions">{{ t('moderation.restrictions') }}</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="alerts">{{ t('moderation.alerts') }}</button>
+</div>
+<section data-pane="reports">
+  <div class="row mb-1"><label for="report-status">{{ t('community.type') }}</label><select id="report-status"><option value="pending">{{ t('moderation.pending') }}</option><option value="resolved">{{ t('moderation.resolved') }}</option><option value="dismissed">{{ t('moderation.dismissed') }}</option><option value="all">{{ t('moderation.all') }}</option></select><button class="btn btn-ghost btn-sm" id="refresh-moderation">{{ t('community.refresh') }}</button></div>
+  <div id="report-list" class="stack" aria-live="polite"></div><p id="reports-empty" class="empty-state card" hidden>{{ t('moderation.no_reports') }}</p>
+</section>
+<section data-pane="stickers" hidden><div id="pending-stickers" class="grid grid-3"></div><p id="mod-stickers-empty" class="empty-state card" hidden>{{ t('moderation.no_stickers') }}</p></section>
+<section data-pane="dictionary" hidden>
+  <div class="card mb-2"><p>{{ t('moderation.dictionary_help') }}</p><form id="word-form" class="row"><div class="field flex-1 m-0"><label for="new-word">{{ t('moderation.word') }}</label><input id="new-word" maxlength="120" required></div><button class="btn btn-primary" type="submit">{{ t('moderation.add_word') }}</button></form></div>
+  <div id="word-list" class="card stack"></div>
+</section>
+<section data-pane="restrictions" hidden><div id="restriction-list" class="stack"></div><p id="restrictions-empty" class="empty-state card" hidden>{{ t('moderation.no_restrictions') }}</p></section>
+<section data-pane="alerts" hidden><div id="alert-list" class="stack"></div><p id="alerts-empty" class="empty-state card" hidden>{{ t('moderation.no_alerts') }}</p></section>
+<dialog id="decision-dialog" class="community-dialog"><form id="decision-form" class="stack"><h2 id="decision-title">{{ t('moderation.reason') }}</h2><div class="field"><label for="decision-reason">{{ t('moderation.reason') }}</label><textarea id="decision-reason" rows="3" maxlength="2000" placeholder="{{ t('moderation.reason_ph') }}" required></textarea></div><div class="row"><button type="submit" class="btn btn-primary">{{ t('ok.saved') }}</button><button type="button" class="btn btn-ghost" data-close-dialog>{{ t('community.cancel') }}</button></div></form></dialog>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  TT.page = { canBan: {{ 'true' if can_ban else 'false' }} };
+  TT.labels = {
+    entity_forum_post: "{{ t('nav.forum') }}", entity_chat_message: "{{ t('nav.messages') }}",
+    entity_question_post: "{{ t('forum.question') }}", entity_sticker: "{{ t('chat.stickers') }}",
+    by: "{{ t('community.by') }}", type: "{{ t('community.type') }}", date: "{{ t('community.date') }}",
+    snapshot: "{{ t('moderation.snapshot') }}", view: "{{ t('community.view_content') }}",
+    approve: "{{ t('moderation.approve') }}", remove: "{{ t('moderation.remove') }}", warn: "{{ t('moderation.warn') }}", ban: "{{ t('moderation.ban') }}",
+    stickerApprove: "{{ t('sticker.approved') }}", stickerReject: "{{ t('sticker.rejected') }}",
+    reason: "{{ t('moderation.reason') }}", lift: "{{ t('moderation.lift') }}", liftReason: "{{ t('moderation.lift_reason') }}",
+    enable: "{{ t('moderation.enable') }}", disable: "{{ t('moderation.disable') }}", until: "{{ t('chat.until') }}",
+    noReports: "{{ t('moderation.no_reports') }}", noStickers: "{{ t('moderation.no_stickers') }}",
+    noRestrictions: "{{ t('moderation.no_restrictions') }}", noAlerts: "{{ t('moderation.no_alerts') }}",
+    loginAlert: "{{ t('moderation.alerts') }}", generic: "{{ t('err.generic') }}", confirm: "{{ t('community.confirm') }}"
+  };
+</script>
+<script src="/static/js/community.js" defer></script>
+<script src="/static/js/moderation.js" defer></script>
+{% endblock %}

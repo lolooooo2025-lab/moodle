@@ -1,0 +1,306 @@
+=== STATIC CHECKERS ===
+------------------------------------------------------------
+check_i18n: PASS — no hard-coded Arabic outside lang/
+------------------------------------------------------------
+check_served_secrets: PASS — 2 secrets checked, none served
+------------------------------------------------------------
+check_fonts: PASS — 8 real font files (magic bytes verified)
+------------------------------------------------------------
+check_enum_values: PASS — 14 enum fields, all literals valid
+------------------------------------------------------------
+check_sql_injection: PASS — no concatenated/f-string SQL in app/
+------------------------------------------------------------
+check_schema_columns: PASS — schema.sql in sync (46 tables, 336 columns)
+------------------------------------------------------------
+=== END-TO-END (real PostgreSQL + live server) ===
+------------------------------------------------------------
+migrate_wave3: PASS — 47 tables; defaults and division memberships ready
+------------------------------------------------------------
+/home/user/ttvenv/lib/python3.11/site-packages/platformdirs/api.py:467: RuntimeDirWarning: XDG_RUNTIME_DIR is not set, falling back to /tmp/runtime-1001
+  return Path(self.user_runtime_dir)
+== Taleb Talta Wave-0 verification (real PostgreSQL) ==
+
+[1] Schema import into a fresh DB
+  [PASS] schema.sql imports with ON_ERROR_STOP — 46 tables, no errors
+
+[2] Register / login / protected access
+  [PASS] register succeeds — حسابك اتعمل
+  [PASS] weak password rejected (Egyptian msg) — كلمة السر قصيرة — لازم 12 حرف على الأقل
+  [PASS] honeypot rejected
+  [PASS] wrong password rejected — الرقم أو كلمة السر غلط
+  [PASS] correct login accepted — تمام، إنت داخل
+  [PASS] protected dashboard returns 200 when logged in
+  [PASS] dashboard is RTL
+  [PASS] me API returns the student
+  [PASS] anonymous me API rejected
+  [PASS] anonymous dashboard redirects to login
+
+[3] CSRF / sesskey
+  [PASS] write without sesskey rejected (403)
+  [PASS] write with valid sesskey accepted — البروفايل اتحدّث
+
+[4] Capability-based authorization
+  [PASS] student denied plugin/manage (403)
+  [PASS] owner login — تمام، إنت داخل
+  [PASS] owner allowed plugin/manage
+
+[5] Plugin lifecycle
+  [PASS] plugin install succeeds — {'component': 'tool_backup', 'status': 'installed'}
+  [PASS] plugin shows installed
+  [PASS] plugin enable succeeds
+  [PASS] plugin uninstall (keep data) succeeds
+  [PASS] plugin back to present after uninstall
+  [PASS] student cannot install plugin (403)
+
+[6] Password reset flow
+  [PASS] forgot returns token in debug
+  [PASS] reset with valid token succeeds — كلمة السر اتغيّرت
+  [PASS] login with new password works
+
+[7] Session timeout + hijack detection
+  [PASS] idle-timeout session rejected — الجلسة خلصت، سجّل دخول تاني
+  [PASS] re-login after idle timeout
+  [PASS] hijacked session (UA mismatch) rejected
+
+[8] Account lockout
+  [PASS] account locked after repeated failures — الحساب مقفول شوية بسبب محاولات كتير — استنى وجرّب
+
+[9] Password hashing / pepper
+  [PASS] peppered hash verifies
+  [PASS] unpeppered hash verifies with pepper enabled (tolerant)
+  [PASS] wrong password fails constant-time compare
+  [PASS] hash format is pbkdf2_sha256
+
+[10] Audit log
+  [PASS] audit recorded user.registered
+  [PASS] audit recorded user.logged_in
+  [PASS] audit recorded user.login_failed
+  [PASS] audit recorded plugin.installed
+  [PASS] audit recorded plugin.uninstalled
+  [PASS] audit recorded capability.denied
+  [PASS] audit recorded session.hijack_detected
+  [PASS] audit recorded user.locked_out
+  [PASS] audit recorded user.password_changed
+  [PASS] audit severities are valid ENUM — {'info', 'warning', 'critical', 'notice'}
+
+== RESULT: 43/43 checks passed ==
+ALL WAVE-0 CHECKS PASSED
+------------------------------------------------------------
+== Taleb Talta Wave-1 verification ==
+  [PASS] owner login — تمام، إنت داخل
+  [PASS] student register
+  [PASS] student cannot create course (403)
+  [PASS] owner creates category — اتعمل
+  [PASS] owner creates course — الكورس اتعمل
+  [PASS] add section
+  [PASS] add lesson
+  [PASS] add text item
+  [PASS] add question item
+  [PASS] lesson blocked before enrolment (403)
+  [PASS] student enrols (free, division match) — اتسجلت في الكورس
+  [PASS] lesson accessible after enrolment
+  [PASS] correct answer NOT sent to browser
+  [PASS] complete text item — progress=50
+  [PASS] wrong answer graded wrong — لأ، جرّب تاني
+  [PASS] right answer graded right — إجابة صح، برافو
+  [PASS] lesson progress reaches 100 — 100%
+  [PASS] other-division student blocked from enrolment — معندكش صلاحية تعمل كده
+  [PASS] student submits library item — المصدر اتبعت وهيتراجع من المشرف
+  [PASS] student cannot view moderation queue (403)
+  [PASS] pending queue shows item
+  [PASS] pending item not public yet
+  [PASS] reject without reason refused — لازم تكتب سبب الرفض
+  [PASS] moderator approves — المصدر اتعتمد واتنشر
+  [PASS] approved item now public
+  [PASS] approved file downloads
+  [PASS] save to private space — اتحفظ في مساحتك
+  [PASS] private space lists item
+  [PASS] private download works
+  [PASS] other student cannot download private copy (403)
+  [PASS] soft delete course — الكورس اتمسح
+  [PASS] deleted course hidden from list
+
+== RESULT: 32/32 checks passed ==
+ALL WAVE-1 CHECKS PASSED
+------------------------------------------------------------
+== Taleb Talta Wave-2 verification ==
+  [PASS] owner login
+  [PASS] create test course
+  [PASS] student enrols in test course
+  [PASS] student cannot author questions (403)
+  [PASS] author mcq_single question — السؤال اتعمل
+  [PASS] author truefalse question — السؤال اتعمل
+  [PASS] author numeric question — السؤال اتعمل
+  [PASS] author mcq_multi question — السؤال اتعمل
+  [PASS] author match question — السؤال اتعمل
+  [PASS] question with <2 options rejected — لازم تحط اختيارين على الأقل
+  [PASS] create exam
+  [PASS] add mcq_single to exam
+  [PASS] add truefalse to exam
+  [PASS] add numeric to exam
+  [PASS] add mcq_multi to exam
+  [PASS] add match to exam
+  [PASS] duplicate exam question rejected
+  [PASS] exam detail hides answers from student
+  [PASS] start attempt — يلا نبدأ
+  [PASS] attempt questions hide answers
+  [PASS] submit graded full marks — score=10.0
+  [PASS] review reveals answers + explanation after submit
+  [PASS] resubmit rejected — المحاولة دي اتسلمت قبل كده
+  [PASS] no attempts left after limit — خلصت كل محاولاتك
+  [PASS] short answer awaits manual grading
+  [PASS] student cannot grade (403)
+  [PASS] manual grade awards points — score=4.0
+  [PASS] timed attempt has expiry
+  [PASS] late submit rejected (time_up) — الوقت خلص
+  [PASS] student cannot view gradebook (403)
+  [PASS] gradebook has rows + ranking
+  [PASS] gradebook CSV export
+  [PASS] post to question discussion — اتنشر
+  [PASS] discussion lists post
+  [PASS] other-division student blocked from exam (403)
+
+== RESULT: 35/35 checks passed ==
+ALL WAVE-2 CHECKS PASSED
+------------------------------------------------------------
+== Taleb Talta Wave-3 verification ==
+  [PASS] owner login
+  [PASS] anonymous forum API rejected
+  [PASS] anonymous chat API rejected
+  [PASS] create isolated course
+  [PASS] enrol fixture student
+  [PASS] enrol fixture student
+  [PASS] enrol fixture student
+  [PASS] student moderation page gated
+  [PASS] forum page renders disclaimer
+  [PASS] chat page renders disclaimer
+  [PASS] moderation page renders
+  [PASS] create general thread
+  [PASS] nested reply
+  [PASS] reply keeps parent reference
+  [PASS] author auto-subscribed
+  [PASS] subscribe toggle
+  [PASS] unread count before read
+  [PASS] GET thread does not mark read
+  [PASS] explicit read clears unread
+  [PASS] staff locks thread
+  [PASS] locked thread rejects student reply
+  [PASS] create course thread
+  [PASS] unenrolled student cannot read course thread
+  [PASS] unenrolled student cannot create course thread
+  [PASS] missing sesskey rejected
+  [PASS] question discussion requires submitted attempt
+  [PASS] submitted student opens question thread
+  [PASS] question thread carries exam reference
+  [PASS] exact phone contact discovery
+  [PASS] start private conversation
+  [PASS] send private message
+  [PASS] recipient sees unread private message
+  [PASS] read state clears unread
+  [PASS] cursor polling returns only newer messages
+  [PASS] contact list saved
+  [PASS] outsider cannot read private history
+  [PASS] outsider cannot send to private channel
+  [PASS] block stops sender
+  [PASS] block stops recipient too
+  [PASS] unblock restores messaging
+  [PASS] clean text preserves casing
+  [PASS] create group channel
+  [PASS] group message
+  [PASS] cannot add unrelated division student to group
+  [PASS] division channel auto-membered
+  [PASS] other division cannot read channel
+  [PASS] division channel message
+  [PASS] upload verified image
+  [PASS] send image attachment
+  [PASS] member downloads private image
+  [PASS] private gateway headers
+  [PASS] outsider denied attachment
+  [PASS] disguised image rejected
+  [PASS] upload quota enforced — {'success': False, 'message': 'مساحة ملفاتك خلصت. الحد الإجمالي 100 ميجا.', 'data': None}
+  [PASS] upload mp4 container
+  [PASS] video range request supported
+  [PASS] upload OOXML study resource
+  [PASS] document forced attachment download
+  [PASS] submit custom sticker
+  [PASS] pending sticker hidden from others
+  [PASS] owner can preview pending sticker
+  [PASS] student cannot approve sticker
+  [PASS] owner approves sticker
+  [PASS] approved sticker listed
+  [PASS] send approved sticker
+  [PASS] owner rejects sticker with reason
+  [PASS] rejected sticker cannot be sent
+  [PASS] admin adds dictionary word
+  [PASS] one submission counts one warning
+  [PASS] profanity masked before storage
+  [PASS] second warning across chat/forum
+  [PASS] third strike bans chat/evaluations
+  [PASS] ban revokes existing sessions
+  [PASS] restricted user can still log in for courses
+  [PASS] me exposes scoped restriction
+  [PASS] course access preserved under scoped ban
+  [PASS] evaluations blocked under scoped ban
+  [PASS] forum blocked under scoped ban
+  [PASS] admin alerted on restricted login
+  [PASS] restriction lists scoped ban
+  [PASS] owner lifts restriction
+  [PASS] chat works after lift
+  [PASS] admin disables dictionary word
+  [PASS] disabled word no longer filtered
+  [PASS] report forum post
+  [PASS] duplicate report rejected
+  [PASS] moderation queue shows snapshot
+  [PASS] student cannot read moderation queue
+  [PASS] staff removes reported content
+  [PASS] removed post hidden from thread
+  [PASS] staff can report chat message
+  [PASS] manual report ban
+  [PASS] manual ban creates restriction
+  [PASS] manual warning decision
+  [PASS] manual warning increments strike once
+  [PASS] manual warning linked to report
+  [PASS] approve/dismiss report
+  [PASS] question discussion post works
+
+== RESULT: 98/98 checks passed ==
+ALL WAVE-3 CHECKS PASSED
+------------------------------------------------------------
+  [PASS] login page RTL
+  [PASS] Cairo is the computed font — Cairo, "Segoe UI", Tahoma, sans-serif
+  [PASS] default theme is light (no dark mode) — light
+  [PASS] background is light — rgb(247, 248, 251)
+  [PASS] register via UI lands on login
+  [PASS] student dashboard renders
+  [PASS] no dark theme offered — ['light', 'neutral', 'sky']
+  [PASS] sky theme applies
+  [PASS] courses list renders
+  [PASS] course detail renders sections
+  [PASS] lesson player renders items
+  [PASS] question feedback shown
+  [PASS] library renders approved items
+  [PASS] private space shows saved item
+  [PASS] exams list renders
+  [PASS] exam runner renders questions
+  [PASS] exam result shown
+  [PASS] exam review renders items
+  [PASS] forum index renders threads
+  [PASS] forum disclaimer visible
+  [PASS] thread detail renders posts
+  [PASS] reply appears in thread
+  [PASS] report dialog submits
+  [PASS] chat channel list renders
+  [PASS] chat message sent from UI
+  [PASS] admin course management renders
+  [PASS] admin moderation queue renders
+  [PASS] admin exam manager renders
+  [PASS] moderation queue renders report
+  [PASS] moderation approve/dismiss works
+  [PASS] profanity dictionary manager renders
+  [PASS] gradebook renders
+  [PASS] zero console errors
+  [PASS] zero failed requests
+
+== BROWSER SMOKE: 34/34 passed ==
+============================================================
+VERIFY: ALL PASSED

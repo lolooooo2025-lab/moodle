@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="breadcrumb">
+  <a href="/courses">{{ t('nav.courses') }}</a><span class="sep">/</span><span id="crumb-title"></span>
+</div>
+<div id="course-head" class="hero">
+  <h1 id="course-title"></h1>
+  <p id="course-summary"></p>
+  <div id="course-actions" class="mt-1"></div>
+</div>
+<div id="sections"></div>
+<dialog id="purchase-dialog" class="community-dialog"><h2>{{ t('buy.request_title') }}</h2><p class="muted">{{ t('buy.request_desc') }}</p><p id="purchase-support" class="card"></p><form id="purchase-form"><div class="field"><label for="purchase-reference">{{ t('buy.reference') }}</label><input id="purchase-reference" required minlength="3" maxlength="120"></div><div class="field"><label for="purchase-note">{{ t('buy.note') }}</label><textarea id="purchase-note" maxlength="1000"></textarea></div><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('buy.request') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+<dialog id="price-dialog" class="community-dialog"><h2 id="price-dialog-title">{{ t('buy.price') }}</h2><form id="price-form"><div class="field"><label for="price-input">{{ t('buy.price_egp') }}</label><input id="price-input" type="number" min="0" max="1000000" step="0.01" required dir="ltr"></div><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('buy.set_price') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+<div id="course-empty" class="empty-state card" hidden>
+  <div class="empty-icon">{{ icons.icon('book', 32) }}</div>
+  <p class="muted">{{ t('course.no_sections') }}</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.page = { courseId: {{ course_id }} };
+  TT.labels = {
+    enroll: "{{ t('course.enroll_free') }}", start: "{{ t('course.start') }}",
+    progress: "{{ t('course.progress') }}", noLessons: "{{ t('course.no_lessons') }}",
+    done: "{{ t('course.completed') }}", generic: "{{ t('err.generic') }}",
+    newSection: "{{ t('course.new_section') }}", sectionTitle: "{{ t('course.section_title') }}",
+    newLesson: "{{ t('course.new_lesson') }}", lessonTitle: "{{ t('course.lesson_title') }}",
+    add: "{{ t('nav.add') }}",
+    buy: "{{ t('buy.request') }}", locked: "{{ t('buy.locked') }}", owned: "{{ t('buy.owned') }}",
+    free: "{{ t('buy.free') }}", price: "{{ t('buy.price') }}", setPrice: "{{ t('buy.set_price') }}",
+    coursePrice: "{{ t('buy.course_price') }}", lessonPrice: "{{ t('buy.lesson_price') }}",
+    supportPhone: "{{ t('buy.support_phone') }}", supportMessage: "{{ t('buy.support_message') }}",
+    noGateway: "{{ t('buy.no_gateway') }}", priceEgp: "{{ t('buy.price_egp') }}"
+  };
+</script>
+<script src="/static/js/course-detail.js" defer></script>
+{% endblock %}

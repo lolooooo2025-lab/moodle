@@ -1,0 +1,50 @@
+# Secrets — never commit
+config/secrets.env
+.env.*
+!.env.example
+!config/secrets.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+config/*.env
+.env.*
+!.env.example
+!config/secrets.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+!.env.example
+!config/secrets.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Uploads / private storage (never web-servable, never committed)
+storage/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Local dev database
+tt_pgdata/
+*.sqlite3
+
+# Node (font tooling only)
+node_modules/
+
+# OS / editor
+.DS_Store
+*.swp
+
+# Clean delivery archives
+deliverables/

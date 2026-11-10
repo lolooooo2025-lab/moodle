@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ t('lib.library') }}</h1>
+  {% if can_moderate %}
+  <a href="/admin/library" class="btn btn-ghost">{{ icons.icon('shield', 18) }} {{ t('admin.library_moderation') }}</a>
+  {% endif %}
+</div>
+<p class="muted mt-neg mb-2">{{ t('lib.subtitle') }}</p>
+
+<div class="row mb-2" role="tablist">
+  <button class="btn btn-primary btn-sm" data-tab="shared" role="tab">{{ t('lib.shared_tab') }}</button>
+  <button class="btn btn-ghost btn-sm" data-tab="private" role="tab">{{ t('lib.private_tab') }}</button>
+  <button class="btn btn-ghost btn-sm" data-tab="upload" role="tab">{{ t('lib.upload_tab') }}</button>
+</div>
+
+<section id="tab-shared">
+  <div id="shared-grid" class="grid grid-3" aria-live="polite"></div>
+  <div id="shared-empty" class="empty-state card" hidden>
+    <div class="empty-icon">{{ icons.icon('library', 32) }}</div>
+    <p class="muted">{{ t('lib.empty') }}</p>
+  </div>
+</section>
+
+<section id="tab-private" hidden>
+  <div class="alert alert-info">{{ t('lib.my_space_desc') }} · {{ t('lib.offline_note') }}</div>
+  <div id="private-grid" class="grid grid-3" aria-live="polite"></div>
+  <div id="private-empty" class="empty-state card" hidden>
+    <div class="empty-icon">{{ icons.icon('folder', 32) }}</div>
+    <p class="muted">{{ t('lib.no_private') }}</p>
+  </div>
+</section>
+
+<section id="tab-upload" hidden>
+  <div class="card card-narrow">
+    <h2>{{ t('lib.submit_title') }}</h2>
+    <form id="lib-upload-form">
+      <div class="field">
+        <label for="lib-title">{{ t('lib.title') }}</label>
+        <input id="lib-title" name="title" type="text" placeholder="{{ t('lib.title_ph') }}" required>
+      </div>
+      <div class="field">
+        <label for="lib-category">{{ t('lib.category') }}</label>
+        <input id="lib-category" name="category" type="text" placeholder="{{ t('lib.category_ph') }}">
+      </div>
+      <div class="field">
+        <label for="lib-description">{{ t('lib.description') }}</label>
+        <textarea id="lib-description" name="description"></textarea>
+      </div>
+      <div class="field">
+        <label for="lib-file">{{ t('lib.file') }}</label>
+        <input id="lib-file" name="upload" type="file" required
+               accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.md,.docx,.xlsx,.pptx">
+        <div class="hint">PDF · Word · Excel · PowerPoint · {{ t('lib.file') }} (25MB)</div>
+      </div>
+      <div class="form-error" role="alert" hidden></div>
+      <button type="submit" class="btn btn-primary">{{ icons.icon('upload', 18) }} {{ t('lib.submit_btn') }}</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.labels = {
+    download: "{{ t('lib.download') }}", save: "{{ t('lib.save_to_space') }}",
+    saved: "{{ t('lib.saved_to_space') }}", downloads: "{{ t('lib.download_count', n='{n}') }}",
+    by: "{{ t('lib.uploaded_by') }}", empty: "{{ t('lib.empty') }}",
+    privateEmpty: "{{ t('lib.no_private') }}", generic: "{{ t('err.generic') }}",
+    approved: "{{ t('lib.approved') }}", saveOffline: "{{ t('lib.save_offline') }}",
+    saveOfflineOk: "{{ t('lib.save_offline_ok') }}"
+  };
+</script>
+<script src="/static/js/library.js" defer></script>
+{% endblock %}

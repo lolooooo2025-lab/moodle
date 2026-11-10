@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head">
+  <h1>{{ t('admin.course_management') }}</h1>
+  <a href="/courses" class="btn btn-ghost btn-sm">{{ t('course.browse') }}</a>
+</div>
+<div class="grid grid-2">
+  <div class="card">
+    <h2>{{ t('course.new_course') }}</h2>
+    <form id="course-form">
+      <div class="field">
+        <label for="c-title">{{ t('course.title') }}</label>
+        <input id="c-title" name="title" type="text" placeholder="{{ t('course.title_ph') }}" required>
+      </div>
+      <div class="field">
+        <label for="c-summary">{{ t('course.summary') }}</label>
+        <textarea id="c-summary" name="summary" class="textarea-short"></textarea>
+      </div>
+      <div class="field">
+        <label for="c-category">{{ t('course.category') }}</label>
+        <select id="c-category" name="category_id">
+          <option value="">{{ t('course.uncategorized') }}</option>
+          {% for cat in categories %}<option value="{{ cat.id }}">{{ cat.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="c-division">{{ t('auth.division') }}</label>
+        <select id="c-division" name="division_id">
+          <option value="">{{ t('course.division_all') }}</option>
+          {% for d in divisions %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="c-visibility">{{ t('course.visibility') }}</label>
+        <select id="c-visibility" name="visibility">
+          <option value="visible">{{ t('course.visibility_visible') }}</option>
+          <option value="hidden">{{ t('course.visibility_hidden') }}</option>
+        </select>
+      </div>
+      <div id="course-custom-fields"></div>
+      <div class="form-error" role="alert" hidden></div>
+      <button type="submit" class="btn btn-primary">{{ icons.icon('plus', 18) }} {{ t('nav.create') }}</button>
+    </form>
+  </div>
+  <div class="card">
+    <h2>{{ t('course.new_category') }}</h2>
+    <form id="category-form" class="row">
+      <div class="field flex-1 m-0">
+        <label for="cat-name" class="visually-hidden">{{ t('course.category_name') }}</label>
+        <input id="cat-name" name="name" type="text" placeholder="{{ t('course.category_name') }}" required>
+      </div>
+      <button type="submit" class="btn btn-ghost">{{ t('nav.add') }}</button>
+    </form>
+    <div id="cat-list" class="row mt-1"></div>
+  </div>
+</div>
+
+<h2 class="section-mt">{{ t('course.courses') }}</h2>
+<div class="card table-wrap">
+  <table class="table">
+    <thead><tr>
+      <th>{{ t('course.title') }}</th><th>{{ t('course.category') }}</th>
+      <th>{{ t('auth.division') }}</th><th>{{ t('course.visibility') }}</th><th></th>
+    </tr></thead>
+    <tbody id="courses-tbody">
+      {% for c in courses %}
+      <tr data-course="{{ c.id }}">
+        <td><strong>{{ c.title }}</strong></td>
+        <td>{{ c.category_id or '—' }}</td>
+        <td>{{ c.division_id or t('course.division_all') }}</td>
+        <td><span class="badge badge-{{ c.visibility }}">{{ t('course.visibility_' + c.visibility) }}</span></td>
+        <td class="actions">
+          <a class="btn btn-sm btn-primary" href="/courses/{{ c.id }}">{{ t('course.manage') }}</a>
+          <button class="btn btn-sm btn-ghost" data-course-fields="{{ c.id }}">{{ t('customfield.title') }}</button>
+          <button class="btn btn-sm btn-danger" data-delete="{{ c.id }}">{{ t('nav.delete') }}</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<dialog id="course-fields-dialog" class="community-dialog"><h2>{{ t('customfield.course_values') }}</h2><form id="course-fields-form"><div id="course-fields-values"></div><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.labels = { generic: "{{ t('err.generic') }}", confirmDelete: "{{ t('course.delete_confirm') }}" };
+</script>
+<script src="/static/js/custom-fields.js" defer></script>
+<script src="/static/js/admin-courses.js" defer></script>
+{% endblock %}

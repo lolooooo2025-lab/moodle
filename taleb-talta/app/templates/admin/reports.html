@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<h1>{{ t('admin.reports') }}</h1>
+<p class="muted">{{ t('report.desc') }}</p>
+<form id="report-filters" class="card filter-bar">
+  <div class="field"><label for="report-kind">{{ t('report.type') }}</label><select id="report-kind" name="kind"></select></div>
+  <div class="field"><label for="report-from">{{ t('report.from') }}</label><input id="report-from" name="date_from" type="date"></div>
+  <div class="field"><label for="report-to">{{ t('report.to') }}</label><input id="report-to" name="date_to" type="date"></div>
+  <div class="field"><label for="report-course">{{ t('nav.courses') }}</label><select id="report-course" name="course_id"><option value="0">{{ t('misc.all') }}</option></select></div>
+  <div class="field"><label for="report-division">{{ t('profile.division') }}</label><select id="report-division" name="division_id"><option value="0">{{ t('misc.all') }}</option></select></div>
+  <div class="field"><label for="report-field">{{ t('customfield.filter') }}</label><select id="report-field" name="custom_field"><option value="">{{ t('misc.none') }}</option></select></div>
+  <div class="field"><label for="report-value">{{ t('customfield.filter_value') }}</label><input id="report-value" name="custom_value"></div>
+  <button class="btn btn-primary" type="submit">{{ t('report.run') }}</button>
+</form>
+<div class="page-head"><span id="report-summary" class="muted"></span><div class="actions"><button class="btn btn-ghost btn-sm" id="export-csv">{{ t('report.export_csv') }}</button><button class="btn btn-primary btn-sm" id="export-xlsx">{{ t('report.export_xlsx') }}</button></div></div>
+<div class="card table-wrap"><table class="table table-dense"><thead id="report-head"></thead><tbody id="report-body"></tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/reports.js" defer></script>{% endblock %}

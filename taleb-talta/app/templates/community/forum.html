@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="page-head">
+  <div><h1>{{ t('forum.title') }}</h1><p class="muted">{{ t('forum.subtitle') }}</p></div>
+  {% if can_post %}<button id="new-thread-btn" class="btn btn-primary">{{ icons.icon('plus', 18) }} {{ t('forum.new') }}</button>{% endif %}
+</div>
+{% include "community/disclaimer.html" %}
+<section class="card mb-2" id="new-thread-panel" hidden>
+  <h2>{{ t('forum.new_title') }}</h2>
+  <form id="new-thread-form" class="stack">
+    <div class="field"><label for="thread-title">{{ t('forum.topic_title') }}</label><input id="thread-title" name="title" maxlength="200" placeholder="{{ t('forum.topic_title_ph') }}" required></div>
+    <div class="field"><label for="thread-scope">{{ t('forum.scope') }}</label><select id="thread-scope" name="course_id"><option value="">{{ t('forum.general') }}</option></select></div>
+    <div class="field"><label for="thread-body">{{ t('forum.first_post') }}</label><textarea id="thread-body" name="body" maxlength="4000" rows="4" placeholder="{{ t('forum.first_post_ph') }}" required></textarea></div>
+    <div class="row"><button class="btn btn-primary" type="submit">{{ t('forum.create') }}</button><button class="btn btn-ghost" type="button" id="cancel-thread">{{ t('community.cancel') }}</button></div>
+  </form>
+</section>
+<div class="spread mb-1"><h2 class="m-0">{{ t('nav.forum') }}</h2><button id="refresh-forum" class="btn btn-ghost btn-sm">{{ t('community.refresh') }}</button></div>
+<div id="forum-list" class="stack" aria-live="polite"><p class="muted">{{ t('community.loading') }}</p></div>
+<div id="forum-empty" class="empty-state card" hidden><div class="empty-icon">{{ icons.icon('chat', 32) }}</div><p>{{ t('forum.empty') }}</p></div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  TT.page = { canManageCourse: {{ 'true' if can_manage_course else 'false' }} };
+  TT.labels = {
+    posts: "{{ t('forum.posts') }}", unread: "{{ t('forum.unread') }}", by: "{{ t('community.by') }}",
+    course: "{{ t('forum.course') }}", general: "{{ t('forum.general') }}", question: "{{ t('forum.question') }}",
+    locked: "{{ t('forum.locked') }}", empty: "{{ t('forum.empty') }}", generic: "{{ t('err.generic') }}",
+    report: "{{ t('community.report') }}", reportReason: "{{ t('community.report_reason') }}",
+    reportPh: "{{ t('community.report_ph') }}", cancel: "{{ t('community.cancel') }}", close: "{{ t('community.close') }}"
+  };
+</script>
+<script src="/static/js/community.js" defer></script>
+<script src="/static/js/forum.js" defer></script>
+{% endblock %}

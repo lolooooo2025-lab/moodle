@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ t('course.browse') }}</h1>
+  {% if can_create %}
+  <a href="/admin/courses" class="btn btn-primary">{{ icons.icon('plus', 18) }} {{ t('course.new_course') }}</a>
+  {% endif %}
+</div>
+<div class="row mb-2">
+  <div class="field m-0 min-w-240">
+    <label for="cat-filter" class="visually-hidden">{{ t('course.categories') }}</label>
+    <select id="cat-filter"><option value="">{{ t('course.all_categories') }}</option></select>
+  </div>
+  <div class="field m-0 flex-1 min-w-220">
+    <label for="course-search" class="visually-hidden">{{ t('nav.search') }}</label>
+    <input id="course-search" type="search" placeholder="{{ t('nav.search_placeholder') }}">
+  </div>
+</div>
+<div id="courses-grid" class="grid grid-3" aria-live="polite"></div>
+<div id="courses-empty" class="empty-state card" hidden>
+  <div class="empty-icon">{{ icons.icon('book', 32) }}</div>
+  <p class="muted">{{ t('course.no_courses') }}</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.labels = {
+    progress: "{{ t('course.progress') }}", continue: "{{ t('course.continue') }}",
+    enroll: "{{ t('course.enroll_free') }}", enrolled: "{{ t('course.enrolled') }}",
+    open: "{{ t('course.open_course') }}", lessons: "{{ t('course.lessons_count', n='{n}') }}",
+    free: "{{ t('course.free') }}", paid: "{{ t('course.paid') }}",
+    generic: "{{ t('err.generic') }}"
+  };
+</script>
+<script src="/static/js/courses-list.js" defer></script>
+{% endblock %}

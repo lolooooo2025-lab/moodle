@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('admin.broadcasts') }}</h1></div>
+<p class="muted">{{ t('notif.desc') }}</p>
+<section class="card"><h2>{{ t('notif.compose') }}</h2><form id="broadcast-form">
+<div class="field"><label for="bc-audience">{{ t('notif.audience') }}</label><select id="bc-audience" name="audience"><option value="all">{{ t('notif.all') }}</option><option value="role">{{ t('notif.role') }}</option><option value="division">{{ t('notif.division') }}</option><option value="course">{{ t('notif.course') }}</option><option value="user">{{ t('notif.user') }}</option></select></div>
+<div class="field" data-target="role" hidden><label for="bc-role">{{ t('notif.role_label') }}</label><select id="bc-role" name="role"></select></div>
+<div class="field" data-target="division" hidden><label for="bc-division">{{ t('notif.division_label') }}</label><select id="bc-division" name="division_id"></select></div>
+<div class="field" data-target="course" hidden><label for="bc-course">{{ t('notif.course_label') }}</label><select id="bc-course" name="course_id"></select></div>
+<div class="field" data-target="user" hidden><label for="bc-user-search">{{ t('notif.user_search') }}</label><input id="bc-user-search" type="search"><select id="bc-user" name="user_id" aria-label="{{ t('notif.user_pick') }}"></select></div>
+<div class="field"><label for="bc-title">{{ t('notif.title') }}</label><input id="bc-title" name="title" required maxlength="200"></div>
+<div class="field"><label for="bc-body">{{ t('notif.body') }}</label><textarea id="bc-body" name="body" required maxlength="4000"></textarea></div>
+<div class="field"><label for="bc-url">{{ t('notif.url') }}</label><input id="bc-url" name="url" dir="ltr" value="/notifications" maxlength="255"></div>
+<div class="form-error" role="alert" hidden></div><button class="btn btn-primary" type="submit">{{ t('notif.send') }}</button></form></section>
+<h2>{{ t('notif.history') }}</h2><div class="card table-wrap"><table class="table"><thead><tr><th>{{ t('notif.title') }}</th><th>{{ t('notif.audience') }}</th><th>{{ t('notif.recipients') }}</th><th>{{ t('time.date') }}</th></tr></thead><tbody id="broadcast-history"></tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/admin-broadcasts.js" defer></script>{% endblock %}

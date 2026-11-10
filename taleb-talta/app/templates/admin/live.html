@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('admin.live') }}</h1><button class="btn btn-primary" id="new-stream">{{ t('stream.new') }}</button></div>
+<p class="muted">{{ t('stream.desc') }}</p><p class="muted small">{{ t('stream.external_note') }}</p>
+<div class="card table-wrap"><table class="table"><thead><tr><th>{{ t('stream.title') }}</th><th>{{ t('live.audience') }}</th><th>{{ t('stream.scheduled_at') }}</th><th>{{ t('stream.status') }}</th><th>{{ t('stream.actions') }}</th></tr></thead><tbody id="streams-body"></tbody></table></div>
+<dialog id="stream-dialog" class="community-dialog"><h2 id="stream-dialog-title">{{ t('stream.new') }}</h2><form id="stream-form"><input type="hidden" id="stream-id">
+<div class="field"><label for="st-title">{{ t('stream.title') }}</label><input id="st-title" required maxlength="200"></div>
+<div class="field"><label for="st-description">{{ t('stream.description') }}</label><textarea id="st-description" maxlength="4000"></textarea></div>
+<div class="field"><label for="st-audience">{{ t('live.audience') }}</label><select id="st-audience"><option value="all">{{ t('notif.all') }}</option><option value="course">{{ t('notif.course') }}</option><option value="division">{{ t('notif.division') }}</option></select></div>
+<div class="field" data-st-target="course" hidden><label for="st-course">{{ t('notif.course_label') }}</label><select id="st-course"></select></div>
+<div class="field" data-st-target="division" hidden><label for="st-division">{{ t('notif.division_label') }}</label><select id="st-division"></select></div>
+<div class="field"><label for="st-time">{{ t('stream.scheduled_at') }}</label><input id="st-time" type="datetime-local" required></div>
+<div class="field"><label for="st-playback">{{ t('stream.playback_url') }}</label><input id="st-playback" type="url" dir="ltr" maxlength="2000"></div>
+<div id="st-credentials-fields"><div class="field"><label for="st-ingest">{{ t('stream.ingest_url') }}</label><input id="st-ingest" type="text" dir="ltr" maxlength="2000"></div><div class="field"><label for="st-key">{{ t('live.publish_key') }}</label><input id="st-key" type="password" dir="ltr" minlength="8" maxlength="512" autocomplete="new-password"></div></div>
+<div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+<dialog id="key-dialog" class="community-dialog"><h2>{{ t('stream.credentials') }}</h2><p class="muted">{{ t('stream.key_warning') }}</p><div class="field"><label for="key-ingest">{{ t('stream.ingest_url') }}</label><input id="key-ingest" readonly dir="ltr"></div><div class="field"><label for="key-value">{{ t('live.publish_key') }}</label><input id="key-value" readonly dir="ltr" type="password"></div><div class="dialog-actions"><button class="btn btn-primary" id="reveal-key">{{ t('stream.reveal_key') }}</button><button class="btn btn-ghost" id="copy-key">{{ t('stream.copy') }}</button>{% if user.role == 'owner' %}<button class="btn btn-danger" id="rotate-key">{{ t('stream.rotate_key') }}</button>{% endif %}<button class="btn btn-ghost" data-close-dialog>{{ t('nav.close') }}</button></div></dialog>
+{% endblock %}
+{% block scripts %}<script nonce="{{ nonce }}">TT.page={isOwner:{{ 'true' if user.role == 'owner' else 'false' }}};</script><script src="/static/js/admin-live.js" defer></script>{% endblock %}

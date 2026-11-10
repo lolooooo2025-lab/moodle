@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<h1>{{ t('admin.dashboard') }}</h1>
+<p class="muted">{{ t('admin.dashboard_desc') }}</p>
+<div class="grid grid-3">
+  <a class="card tile" href="/admin/courses"><span class="tile-icon">{{ icons.icon('book') }}</span><span class="tile-label">{{ t('admin.courses') }}</span><span class="tile-desc">{{ t('dashboard.courses_desc') }}</span></a>
+  <a class="card tile tile-secondary" href="/admin/library"><span class="tile-icon">{{ icons.icon('library') }}</span><span class="tile-label">{{ t('admin.library') }}</span><span class="tile-desc">{{ t('dashboard.library_desc') }}</span></a>
+  <a class="card tile tile-accent" href="/admin/exams"><span class="tile-icon">{{ icons.icon('exam') }}</span><span class="tile-label">{{ t('admin.exams') }}</span><span class="tile-desc">{{ t('dashboard.exams_desc') }}</span></a>
+  <a class="card tile" href="/admin/moderation"><span class="tile-icon">{{ icons.icon('shield') }}</span><span class="tile-label">{{ t('admin.moderation') }}</span><span class="tile-desc">{{ t('moderation.subtitle') }}</span></a>
+  <a class="card tile" href="/admin/users"><span class="tile-icon">{{ icons.icon('users') }}</span><span class="tile-label">{{ t('admin.users') }}</span><span class="tile-desc">{{ t('admin.users_desc') }}</span></a>
+  <a class="card tile tile-secondary" href="/admin/reports"><span class="tile-icon">{{ icons.icon('exam') }}</span><span class="tile-label">{{ t('admin.reports') }}</span><span class="tile-desc">{{ t('report.desc') }}</span></a>
+  {% if user.role in ['owner', 'admin'] %}
+  <a class="card tile" href="/admin/tasks"><span class="tile-icon">{{ icons.icon('settings') }}</span><span class="tile-label">{{ t('admin.tasks') }}</span><span class="tile-desc">{{ t('cron.desc') }}</span></a>
+  <a class="card tile tile-accent" href="/admin/plugins"><span class="tile-icon">{{ icons.icon('plus') }}</span><span class="tile-label">{{ t('admin.plugins') }}</span><span class="tile-desc">{{ t('admin.plugins_desc') }}</span></a>
+  <a class="card tile" href="/admin/settings"><span class="tile-icon">{{ icons.icon('settings') }}</span><span class="tile-label">{{ t('admin.settings') }}</span><span class="tile-desc">{{ t('admin.settings_desc') }}</span></a>
+  <a class="card tile tile-secondary" href="/admin/audit"><span class="tile-icon">{{ icons.icon('shield') }}</span><span class="tile-label">{{ t('admin.audit') }}</span><span class="tile-desc">{{ t('admin.audit_desc') }}</span></a>
+  <a class="card tile" href="/admin/purchases"><span class="tile-icon">{{ icons.icon('download') }}</span><span class="tile-label">{{ t('admin.purchases') }}</span><span class="tile-desc">{{ t('placeholder.wave5_badge') }} · {{ t('placeholder.not_built') }}</span></a>
+  <a class="card tile tile-secondary" href="/admin/broadcasts"><span class="tile-icon">{{ icons.icon('bell') }}</span><span class="tile-label">{{ t('admin.broadcasts') }}</span><span class="tile-desc">{{ t('placeholder.wave5_badge') }} · {{ t('placeholder.not_built') }}</span></a>
+  <a class="card tile tile-accent" href="/admin/campaigns"><span class="tile-icon">{{ icons.icon('bell') }}</span><span class="tile-label">{{ t('admin.campaigns') }}</span><span class="tile-desc">{{ t('placeholder.wave5_badge') }} · {{ t('placeholder.not_built') }}</span></a>
+  <a class="card tile" href="/admin/live"><span class="tile-icon">{{ icons.icon('chat') }}</span><span class="tile-label">{{ t('admin.live') }}</span><span class="tile-desc">{{ t('placeholder.wave5_badge') }} · {{ t('placeholder.not_built') }}</span></a>
+  {% endif %}
+  {% if user.role == 'owner' %}
+  <a class="card tile" href="/admin/security"><span class="tile-icon">{{ icons.icon('shield') }}</span><span class="tile-label">{{ t('admin.security') }}</span><span class="tile-desc">{{ t('security.desc') }}</span></a>
+  <a class="card tile tile-accent" href="/admin/backups"><span class="tile-icon">{{ icons.icon('download') }}</span><span class="tile-label">{{ t('backup.title') }}</span><span class="tile-desc">{{ t('backup.desc_real') }}</span></a>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('admin.tasks') }}</h1>{% if user.role == 'owner' %}<a class="btn btn-ghost btn-sm" href="/admin/backups">{{ t('backup.title') }}</a>{% endif %}</div>
+<p class="muted">{{ t('cron.desc') }}</p>
+<div class="card table-wrap"><table class="table"><thead><tr><th>{{ t('cron.task') }}</th><th>{{ t('cron.schedule') }}</th><th>{{ t('cron.next_run') }}</th><th>{{ t('cron.last_run') }}</th><th>{{ t('buy.status') }}</th><th></th></tr></thead><tbody id="tasks-body"></tbody></table></div>
+<h2>{{ t('cron.history') }}</h2>
+<div class="card table-wrap"><table class="table table-dense"><thead><tr><th>{{ t('cron.task') }}</th><th>{{ t('buy.status') }}</th><th>{{ t('time.date') }}</th><th>{{ t('cron.detail') }}</th></tr></thead><tbody id="runs-body"></tbody></table></div>
+<dialog id="task-dialog" class="community-dialog"><h2>{{ t('cron.edit') }}</h2><form id="task-form"><input type="hidden" name="id">{% for f in ['minute','hour','day','month','dayofweek'] %}<div class="field"><label for="task-{{ f }}">{{ t('cron.' + f) }}</label><input id="task-{{ f }}" name="{{ f }}" dir="ltr" required value="*"></div>{% endfor %}<label class="check-row"><input type="checkbox" name="enabled" checked> {{ t('misc.enabled') }}</label><p class="muted">{{ t('cron.utc_hint') }}</p><div class="form-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button><button class="btn btn-ghost" type="button" data-close-dialog>{{ t('nav.cancel') }}</button></div></form></dialog>
+{% endblock %}
+{% block scripts %}<script src="/static/js/admin-tasks.js" defer></script>{% endblock %}

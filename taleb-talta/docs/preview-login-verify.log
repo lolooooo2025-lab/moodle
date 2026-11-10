@@ -1,0 +1,14 @@
+== Cross-site iframe: partitioned cookies enabled ==
+  [PASS] standalone escape is available before login
+  [PASS] CHIPS login reaches dashboard — https://app.test:8443/
+  [PASS] session cookie is secure and partitioned
+== Cross-site iframe: all cookie storage rejected ==
+  [PASS] standalone escape is available before login
+  [PASS] rejected cookie does not redirect into a false success
+  [PASS] cookie rejection shows an actionable error
+  [PASS] no success toast after rejected cookie
+  [PASS] standalone action remains visible
+  [PASS] escape opens the app first-party
+  [PASS] standalone login renders the real dashboard
+
+== PREVIEW LOGIN: 10/10 passed ==

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ t('exam.gradebook') }}</h1>
+  <a id="export-btn" class="btn btn-accent" href="/api/courses/{{ course_id }}/gradebook/export">{{ icons.icon('download', 18) }} {{ t('exam.export') }}</a>
+</div>
+<div class="card table-wrap">
+  <table id="gradebook-table" class="table">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+<div id="gradebook-empty" class="empty-state card" hidden>
+  <div class="empty-icon">{{ icons.icon('award', 32) }}</div>
+  <p class="muted">{{ t('exam.no_students') }}</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.page = { courseId: {{ course_id }} };
+  TT.labels = {
+    student: "{{ t('exam.student') }}", total: "{{ t('exam.total') }}", rank: "{{ t('exam.rank') }}",
+    phone: "{{ t('auth.phone') }}", generic: "{{ t('err.generic') }}"
+  };
+</script>
+<script src="/static/js/gradebook.js" defer></script>
+{% endblock %}

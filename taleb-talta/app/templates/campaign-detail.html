@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="breadcrumb"><a href="/campaigns">{{ t('notif.friday_archive') }}</a><span class="sep">/</span><span>{{ t('notif.friday') }}</span></div>
+<article class="card" id="campaign-article" hidden><div class="spread"><h1 id="campaign-title"></h1><span class="badge badge-approved" id="campaign-week"></span></div><p class="muted" id="campaign-date"></p><div class="pre-wrap" id="campaign-body"></div><button class="btn btn-ghost btn-sm mt-1" id="campaign-read">{{ t('notif.mark_read') }}</button></article>
+{% endblock %}
+{% block scripts %}<script nonce="{{ nonce }}">TT.page={campaignId:{{ campaign_id }}};</script><script src="/static/js/campaign-detail.js" defer></script>{% endblock %}

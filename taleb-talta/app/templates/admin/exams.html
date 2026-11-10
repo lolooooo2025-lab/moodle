@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('exam.manage') }}</h1></div>
+<div class="field min-w-240">
+  <label for="admin-course">{{ t('exam.select_course') }}</label>
+  <select id="admin-course">
+    {% for c in courses %}<option value="{{ c.id }}">{{ c.title }}</option>{% endfor %}
+  </select>
+</div>
+<div class="grid grid-2">
+  <div class="card">
+    <h2 class="mb-1">{{ t('exam.question_bank') }}</h2>
+    <form id="question-form">
+      <div class="field">
+        <label for="q-type">{{ t('exam.question_type') }}</label>
+        <select id="q-type">
+          <option value="mcq_single">{{ t('exam.mcq_single') }}</option>
+          <option value="mcq_multi">{{ t('exam.mcq_multi') }}</option>
+          <option value="truefalse">{{ t('exam.truefalse') }}</option>
+          <option value="short">{{ t('exam.short') }}</option>
+          <option value="match">{{ t('exam.match') }}</option>
+          <option value="numeric">{{ t('exam.numeric_type') }}</option>
+        </select>
+      </div>
+      <div class="field"><label for="q-prompt">{{ t('exam.prompt') }}</label><textarea id="q-prompt" required></textarea></div>
+      <div class="field" data-q="options"><label for="q-options">{{ t('exam.options') }}</label><textarea id="q-options"></textarea></div>
+      <div class="field" data-q="answer"><label for="q-answer">{{ t('exam.correct_answer') }}</label><input id="q-answer" type="text"><span class="hint">{{ t('exam.correct_multi_hint') }}</span></div>
+      <div class="field" data-q="tf" hidden>
+        <label for="q-tf">{{ t('exam.correct_answer') }}</label>
+        <select id="q-tf"><option value="true">{{ t('exam.true') }}</option><option value="false">{{ t('exam.false') }}</option></select>
+      </div>
+      <div class="field" data-q="numvalue" hidden><label for="q-numvalue">{{ t('exam.numeric_value') }}</label><input id="q-numvalue" type="number" step="any" dir="ltr"></div>
+      <div class="field" data-q="numtol" hidden><label for="q-numtol">{{ t('exam.numeric_tolerance') }}</label><input id="q-numtol" type="number" step="any" value="0" dir="ltr"></div>
+      <div class="field" data-q="matchleft" hidden><label for="q-matchleft">{{ t('exam.match_left') }}</label><textarea id="q-matchleft"></textarea></div>
+      <div class="field" data-q="matchright" hidden><label for="q-matchright">{{ t('exam.match_right') }}</label><textarea id="q-matchright"></textarea></div>
+      <div class="field" data-q="matchpairs" hidden><label for="q-matchpairs">{{ t('exam.match_pairs') }}</label><textarea id="q-matchpairs" dir="ltr"></textarea></div>
+      <div class="field"><label for="q-explanation">{{ t('exam.explanation') }}</label><textarea id="q-explanation"></textarea></div>
+      <button type="submit" class="btn btn-primary">{{ icons.icon('plus', 18) }} {{ t('exam.add_question') }}</button>
+    </form>
+    <h3 class="section-mt">{{ t('exam.saved_questions') }}</h3>
+    <div id="question-list"></div>
+  </div>
+  <div class="card">
+    <h2 class="mb-1">{{ t('exam.exams') }}</h2>
+    <form id="exam-form">
+      <div class="field"><label for="e-title">{{ t('exam.title') }}</label><input id="e-title" type="text" required></div>
+      <div class="field"><label for="e-desc">{{ t('exam.description') }}</label><textarea id="e-desc"></textarea></div>
+      <div class="field"><label for="e-time">{{ t('exam.time_limit_minutes') }}</label><input id="e-time" type="number" min="0" value="0"></div>
+      <div class="field"><label for="e-attempts">{{ t('exam.max_attempts') }}</label><input id="e-attempts" type="number" min="0" value="1"></div>
+      <button type="submit" class="btn btn-primary">{{ icons.icon('plus', 18) }} {{ t('exam.add_exam') }}</button>
+    </form>
+    <div id="exam-list" class="mt-2"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.labels = {
+    addQuestion: "{{ t('exam.add_question') }}", deleteQuestion: "{{ t('exam.delete_question') }}",
+    noBank: "{{ t('exam.no_bank') }}", addExam: "{{ t('exam.add_exam') }}",
+    noExams: "{{ t('exam.no_exams_admin') }}", pickQuestion: "{{ t('exam.pick_question') }}",
+    addToExam: "{{ t('exam.add_to_exam') }}", points: "{{ t('exam.points') }}",
+    questions: "{{ t('exam.question_count') }}", gradebook: "{{ t('exam.view_gradebook') }}",
+    generic: "{{ t('err.generic') }}", typeLabels: {
+      mcq_single: "{{ t('exam.mcq_single') }}", mcq_multi: "{{ t('exam.mcq_multi') }}",
+      truefalse: "{{ t('exam.truefalse') }}", short: "{{ t('exam.short') }}",
+      match: "{{ t('exam.match') }}", numeric: "{{ t('exam.numeric_type') }}"
+    }
+  };
+</script>
+<script src="/static/js/admin-exams.js" defer></script>
+{% endblock %}

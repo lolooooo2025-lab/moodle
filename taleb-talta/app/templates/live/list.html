@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><h1>{{ t('nav.live') }}</h1></div><p class="muted">{{ t('stream.external_note') }}</p>
+<div id="live-list" class="grid grid-3"></div><div id="live-empty" class="empty-state card" hidden>{{ t('stream.empty') }}</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/live-list.js" defer></script>{% endblock %}

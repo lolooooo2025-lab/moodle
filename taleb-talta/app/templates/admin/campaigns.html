@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t('admin.campaigns') }}</h1><a class="btn btn-ghost btn-sm" href="/campaigns">{{ t('notif.friday_archive') }}</a></div>
+<p class="muted">{{ t('campaign.desc') }}</p>
+<section class="card"><h2 id="campaign-form-title">{{ t('notif.friday') }}</h2><form id="campaign-form"><input type="hidden" id="campaign-id">
+<div class="field"><label for="campaign-week">{{ t('campaign.week') }}</label><input id="campaign-week" type="date" required></div>
+<div class="field"><label for="campaign-title">{{ t('notif.title') }}</label><input id="campaign-title" required maxlength="200"></div>
+<div class="field"><label for="campaign-body">{{ t('notif.body') }}</label><textarea id="campaign-body" required maxlength="8000"></textarea></div>
+<div class="form-error" role="alert" hidden></div><button class="btn btn-primary" type="submit">{{ t('nav.save') }}</button></form></section>
+<div class="card table-wrap mt-1"><table class="table"><thead><tr><th>{{ t('campaign.week') }}</th><th>{{ t('notif.title') }}</th><th>{{ t('buy.status') }}</th><th>{{ t('campaign.publish_at') }}</th><th></th></tr></thead><tbody id="campaigns-body"></tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/admin-campaigns.js" defer></script>{% endblock %}

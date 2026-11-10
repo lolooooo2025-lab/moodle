@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="breadcrumb"><a href="/exams">{{ t('exam.exams') }}</a> {{ icons.icon('arrow-left', 14) }} <span id="crumb-title">{{ t('exam.exam') }}</span></div>
+<div id="exam-intro" class="card card-narrow">
+  <h1 id="exam-title" class="mb-1"></h1>
+  <p id="exam-desc" class="muted"></p>
+  <div id="exam-meta" class="row mb-2"></div>
+  <button id="start-btn" class="btn btn-primary">{{ icons.icon('play', 18) }} {{ t('exam.start') }}</button>
+  <p id="intro-error" class="form-error" hidden></p>
+</div>
+<div id="exam-runner" hidden>
+  <div class="spread exam-runner-head card mb-2">
+    <strong id="runner-title"></strong>
+    <span id="timer" class="chip" hidden></span>
+  </div>
+  <form id="exam-form"></form>
+  <div class="row mt-2">
+    <button id="submit-btn" class="btn btn-primary">{{ icons.icon('check', 18) }} {{ t('exam.submit') }}</button>
+  </div>
+</div>
+<div id="exam-result" class="card card-narrow" hidden>
+  <h1 class="mb-1">{{ t('exam.result') }}</h1>
+  <p id="result-score" class="result-score"></p>
+  <p id="result-note" class="muted"></p>
+  <a id="review-link" class="btn btn-primary" href="#">{{ t('exam.review') }}</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  window.TT = window.TT || {};
+  TT.page = { examId: {{ exam_id }} };
+  TT.labels = {
+    start: "{{ t('exam.start') }}", submit: "{{ t('exam.submit') }}",
+    confirmSubmit: "{{ t('exam.confirm_submit') }}", timeLeft: "{{ t('exam.time_left') }}",
+    minutes: "{{ t('time.minutes') }}", questions: "{{ t('exam.question_count') }}",
+    attempts: "{{ t('exam.attempts') }}", questionN: "{{ t('exam.question_n') }}",
+    chooseOne: "{{ t('exam.choose_one') }}", chooseMulti: "{{ t('exam.choose_multi') }}",
+    true: "{{ t('exam.true') }}", false: "{{ t('exam.false') }}",
+    shortAnswer: "{{ t('exam.short_answer') }}", numeric: "{{ t('exam.numeric') }}",
+    matching: "{{ t('exam.matching') }}", score: "{{ t('exam.score') }}",
+    outOf: "{{ t('exam.out_of') }}", pendingManual: "{{ t('exam.pending_manual') }}",
+    review: "{{ t('exam.review') }}", generic: "{{ t('err.generic') }}",
+    points: "{{ t('exam.points') }}"
+  };
+</script>
+<script src="/static/js/exam-take.js" defer></script>
+{% endblock %}

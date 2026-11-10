@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<div class="page-head"><h1>{{ t(title_key) }}</h1><span class="badge badge-pending">{{ t('placeholder.wave5_badge') }}</span></div>
+<section class="card empty-state">
+  <h2>{{ t('placeholder.not_built') }}</h2>
+  <p class="muted">{{ t(desc_key) }}</p>
+  <p class="muted">{{ t('placeholder.wave5') }}</p>
+  <a href="/admin" class="btn btn-primary">{{ t('admin.dashboard') }}</a>
+</section>
+{% endblock %}

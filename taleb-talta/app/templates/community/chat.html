@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "icons.html" as icons %}
+{% block content %}
+<div class="page-head"><div><h1>{{ t('chat.title') }}</h1><p class="muted">{{ t('chat.subtitle') }}</p></div><button id="new-group-btn" class="btn btn-primary">{{ icons.icon('users', 18) }} {{ t('chat.new_group') }}</button></div>
+{% include "community/disclaimer.html" %}
+<p id="chat-restriction" class="alert alert-warning" hidden>{{ t('chat.restriction_notice') }} <span id="chat-restriction-until"></span></p>
+<div class="chat-layout">
+  <aside class="chat-sidebar card">
+    <div class="spread mb-1"><h2 class="m-0">{{ t('chat.channels') }}</h2><button id="refresh-channels" class="btn btn-ghost btn-sm" aria-label="{{ t('community.refresh') }}">{{ icons.icon('clock', 16) }}</button></div>
+    <label class="visually-hidden" for="channel-filter">{{ t('chat.channels') }}</label>
+    <select id="channel-filter" class="mb-1"><option value="">{{ t('chat.all') }}</option><option value="private">{{ t('chat.private') }}</option><option value="group">{{ t('chat.group') }}</option><option value="division">{{ t('chat.division') }}</option></select>
+    <div id="channel-list" class="channel-list" aria-live="polite"></div>
+    <p id="channels-empty" class="muted small" hidden>{{ t('chat.empty') }}</p>
+    <div class="sidebar-section">
+      <div class="spread"><h3>{{ t('chat.contacts') }}</h3><button id="find-contact-btn" class="btn btn-ghost btn-sm">{{ t('chat.find') }}</button></div>
+      <div id="contact-list" class="stack"></div><p id="contacts-empty" class="muted small" hidden>{{ t('chat.no_contacts') }}</p>
+    </div>
+    <div class="sidebar-section"><button id="my-stickers-btn" class="btn btn-ghost btn-sm">{{ t('chat.my_stickers') }}</button><button id="add-sticker-btn" class="btn btn-ghost btn-sm">{{ t('chat.add_sticker') }}</button></div>
+  </aside>
+  <section class="chat-main card">
+    <div id="chat-placeholder" class="empty-state"><div class="empty-icon">{{ icons.icon('chat', 32) }}</div><p>{{ t('chat.pick') }}</p></div>
+    <div id="conversation" hidden>
+      <header class="conversation-head">
+        <div><h2 id="conversation-title" class="m-0"></h2><p id="conversation-meta" class="muted small m-0"></p></div>
+        <div class="row"><button id="block-btn" class="btn btn-ghost btn-sm" hidden>{{ t('chat.block') }}</button><button id="add-members-btn" class="btn btn-ghost btn-sm" hidden>{{ t('chat.add_members') }}</button></div>
+      </header>
+      <p id="chat-blocked-notice" class="alert alert-warning" hidden>{{ t('chat.blocked') }}</p>
+      <button id="older-btn" class="btn btn-ghost btn-sm" hidden>{{ t('chat.older') }}</button>
+      <div id="message-list" class="message-list" aria-live="polite" aria-relevant="additions"></div>
+      <p id="messages-empty" class="muted empty-chat" hidden>{{ t('chat.no_messages') }}</p>
+      <form id="send-form" class="chat-composer">
+        <div class="field"><label for="message-body">{{ t('chat.message') }}</label><textarea id="message-body" rows="2" maxlength="4000" placeholder="{{ t('chat.message_ph') }}"></textarea></div>
+        <div id="pending-attachment" class="attachment-ready" hidden><span id="pending-attachment-name"></span><button type="button" id="remove-attachment" class="btn btn-ghost btn-sm">{{ t('chat.remove_attachment') }}</button></div>
+        <div id="pending-sticker" class="attachment-ready" hidden><img id="pending-sticker-image" alt=""><button type="button" id="remove-sticker" class="btn btn-ghost btn-sm">{{ t('chat.sticker_clear') }}</button></div>
+        <div class="spread"><div class="row"><label class="btn btn-ghost btn-sm upload-label" for="chat-file">{{ icons.icon('upload', 16) }} {{ t('chat.attachment') }}</label><input class="visually-hidden" id="chat-file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif,.mp4,.webm,.pdf,.txt,.md,.docx,.xlsx,.pptx"><button type="button" id="stickers-btn" class="btn btn-ghost btn-sm">{{ t('chat.sticker_pick') }}</button></div><button type="submit" id="send-btn" class="btn btn-primary">{{ t('chat.send') }}</button></div>
+        <p class="muted small">{{ t('chat.attach_help') }}</p><p class="muted small">{{ t('chat.polling') }}</p>
+      </form>
+      <section id="sticker-picker" class="sticker-picker" hidden><div class="spread"><h3>{{ t('chat.stickers') }}</h3><button id="close-stickers" type="button" class="btn btn-ghost btn-sm">{{ t('community.close') }}</button></div><div id="sticker-grid" class="sticker-grid"></div><p id="stickers-empty" class="muted" hidden>{{ t('chat.no_stickers') }}</p></section>
+    </div>
+  </section>
+</div>
+<dialog id="contact-dialog" class="community-dialog"><form id="contact-form" class="stack"><h2>{{ t('chat.find_contact') }}</h2><p class="muted small">{{ t('chat.contact_help') }}</p><div class="field"><label for="contact-phone">{{ t('chat.phone_ph') }}</label><input id="contact-phone" type="tel" inputmode="tel" required></div><p id="contact-result" class="alert alert-info" hidden></p><div class="row"><button type="submit" class="btn btn-primary">{{ t('chat.find') }}</button><button type="button" id="start-contact" class="btn btn-primary" hidden>{{ t('chat.start') }}</button><button type="button" class="btn btn-ghost" data-close-dialog>{{ t('community.close') }}</button></div></form></dialog>
+<dialog id="group-dialog" class="community-dialog"><form id="group-form" class="stack"><h2 id="group-dialog-title">{{ t('chat.new_group') }}</h2><div class="field" id="group-title-field"><label for="group-title">{{ t('chat.group_title') }}</label><input id="group-title" maxlength="160" placeholder="{{ t('chat.group_title_ph') }}"></div><div class="field"><label for="group-phones">{{ t('chat.group_members') }}</label><textarea id="group-phones" rows="4" placeholder="{{ t('chat.group_members_ph') }}" required></textarea></div><div class="row"><button type="submit" class="btn btn-primary">{{ t('chat.create_group') }}</button><button type="button" class="btn btn-ghost" data-close-dialog>{{ t('community.cancel') }}</button></div></form></dialog>
+<dialog id="sticker-dialog" class="community-dialog"><form id="sticker-form" class="stack"><h2>{{ t('chat.add_sticker') }}</h2><p class="muted small">{{ t('chat.sticker_help') }}</p><div class="field"><label for="sticker-title">{{ t('chat.sticker_title') }}</label><input id="sticker-title" maxlength="120" required></div><div class="field"><label for="sticker-file">{{ t('chat.sticker_file') }}</label><input id="sticker-file" type="file" accept=".png,.jpg,.jpeg,.webp" required></div><div class="row"><button type="submit" class="btn btn-primary">{{ t('chat.sticker_submit') }}</button><button type="button" class="btn btn-ghost" data-close-dialog>{{ t('community.cancel') }}</button></div></form></dialog>
+<dialog id="my-stickers-dialog" class="community-dialog"><div class="spread"><h2>{{ t('chat.my_stickers') }}</h2><button class="btn btn-ghost btn-sm" data-close-dialog>{{ t('community.close') }}</button></div><div id="my-stickers-list" class="stack"></div></dialog>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ nonce }}">
+  TT.page = { userId: {{ user_id }}, initialChannel: {{ initial_channel | int }} };
+  TT.labels = {
+    private: "{{ t('chat.private') }}", group: "{{ t('chat.group') }}", division: "{{ t('chat.division') }}",
+    empty: "{{ t('chat.empty') }}", noMessages: "{{ t('chat.no_messages') }}", noContacts: "{{ t('chat.no_contacts') }}",
+    members: "{{ t('chat.members') }}", unread: "{{ t('forum.unread') }}", read: "{{ t('chat.read') }}",
+    block: "{{ t('chat.block') }}", unblock: "{{ t('chat.unblock') }}", blocked: "{{ t('chat.blocked') }}",
+    start: "{{ t('chat.start') }}", newGroup: "{{ t('chat.new_group') }}", addMembers: "{{ t('chat.add_members') }}",
+    add: "{{ t('chat.add_members') }}", download: "{{ t('chat.download') }}", watch: "{{ t('chat.watch') }}",
+    attachmentReady: "{{ t('chat.attachment_ready') }}", noStickers: "{{ t('chat.no_stickers') }}",
+    stickerPick: "{{ t('chat.sticker_pick') }}", pending: "{{ t('moderation.pending') }}",
+    approved: "{{ t('status.approved') }}", rejected: "{{ t('status.rejected') }}", until: "{{ t('chat.until') }}",
+    confirm: "{{ t('community.confirm') }}", generic: "{{ t('err.generic') }}",
+    report: "{{ t('community.report') }}", reportReason: "{{ t('community.report_reason') }}",
+    reportPh: "{{ t('community.report_ph') }}", cancel: "{{ t('community.cancel') }}", close: "{{ t('community.close') }}"
+  };
+</script>
+<script src="/static/js/community.js" defer></script>
+<script src="/static/js/chat.js" defer></script>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="breadcrumb"><a href="/live">{{ t('nav.live') }}</a><span class="sep">/</span><span id="live-crumb"></span></div>
+<div class="page-head"><h1 id="live-title"></h1><span class="badge" id="live-status"></span></div>
+<p id="live-description" class="muted pre-wrap"></p>
+<div class="live-layout"><section class="card"><video id="live-video" controls playsinline class="live-video"></video><p class="muted small">{{ t('stream.player_note') }}</p><p id="live-waiting" class="empty-state" hidden></p></section>
+<section class="card live-chat"><h2>{{ t('live.chat') }}</h2><div id="live-messages" class="live-messages" aria-live="polite"></div><form id="live-chat-form" class="row mt-1"><input id="live-chat-input" class="flex-1" maxlength="4000" placeholder="{{ t('stream.chat_placeholder') }}" aria-label="{{ t('live.chat') }}"><button class="btn btn-primary" type="submit">{{ t('stream.chat_send') }}</button></form><p id="live-chat-closed" class="muted" hidden>{{ t('stream.chat_closed') }}</p></section></div>
+{% endblock %}
+{% block scripts %}<script nonce="{{ nonce }}">TT.page={streamId:{{ stream_id }},userId:{{ user.id }}};</script><script src="/static/js/vendor/hls.min.js" defer></script><script src="/static/js/live-player.js" defer></script>{% endblock %}

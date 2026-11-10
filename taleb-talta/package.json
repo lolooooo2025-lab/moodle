@@ -1,0 +1,25 @@
+{
+  "name": "taleb-talta-netlify",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Complete Taleb Talta application packaged for Netlify Functions and Neon Postgres",
+  "engines": {
+    "node": ">=22.11.0 <25"
+  },
+  "scripts": {
+    "build": "node netlify/build.mjs",
+    "check": "node --check netlify/build.mjs && node --check netlify/server.mjs && node --check netlify/functions/app.mjs && node --check netlify/functions/cron.mjs && node --check netlify/functions/worker-background.mjs && node --test netlify/tests/*.test.mjs",
+    "package:check": "node netlify/check-bundle.mjs",
+    "dev": "netlify dev --offline --port 8000",
+    "deploy": "netlify deploy --prod",
+    "package:zip": "node netlify/package.mjs",
+    "db:initialize": "node netlify/initialize.mjs",
+    "dev:stop": "node netlify/stop-runtime.mjs"
+  },
+  "devDependencies": {
+    "@netlify/zip-it-and-ship-it": "16.6.0",
+    "netlify-cli": "27.16.3",
+    "smol-toml": "1.6.0"
+  }
+}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-card card">
+  <h1>{{ t('auth.register_title') }}</h1>
+  <form id="register-form" data-api="/api/auth/register" data-redirect="/login" novalidate>
+    <div class="field">
+      <label for="name">{{ t('auth.name') }}</label>
+      <input id="name" name="name" type="text" autocomplete="name" required>
+    </div>
+    <div class="field">
+      <label for="phone">{{ t('auth.phone') }}</label>
+      <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel"
+             placeholder="{{ t('auth.phone_ph') }}" required dir="ltr">
+    </div>
+    <div class="field">
+      <label for="guardian_phone">{{ t('auth.guardian_phone') }}</label>
+      <input id="guardian_phone" name="guardian_phone" type="tel" inputmode="numeric"
+             required dir="ltr">
+    </div>
+    <div class="field">
+      <label for="division_id">{{ t('auth.division') }}</label>
+      <select id="division_id" name="division_id" required>
+        <option value="">{{ t('auth.division_ph') }}</option>
+        {% for d in divisions %}
+          <option value="{{ d.id }}">{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="password">{{ t('auth.password') }}</label>
+      <input id="password" name="password" type="password" autocomplete="new-password"
+             placeholder="{{ t('auth.password_ph') }}" required>
+    </div>
+    <!-- honeypot: hidden from humans, bots fill it -->
+    <div class="hp-field" aria-hidden="true">
+      <label for="website">website</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+    </div>
+    <div class="form-error" role="alert" hidden></div>
+    <button type="submit" class="btn btn-primary btn-block">{{ t('auth.register_btn') }}</button>
+  </form>
+  <div class="auth-links">
+    <span class="muted">{{ t('auth.have_account') }}</span>
+    <a href="/login">{{ t('nav.login') }}</a>
+  </div>
+</div>
+{% endblock %}

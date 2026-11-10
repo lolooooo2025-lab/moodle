@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-card card">
+  <h1>{{ t('auth.login_title') }}</h1>
+  <p class="muted">{{ t('auth.welcome') }}</p>
+  <aside id="preview-login-help" class="preview-login-help" hidden>
+    <p>{{ t('auth.preview_help') }}</p>
+    <a class="btn btn-accent btn-block" href="/login" target="_blank" rel="noopener noreferrer">{{ t('auth.open_standalone') }}</a>
+    <p class="muted small">{{ t('auth.preview_login_again') }}</p>
+  </aside>
+  <form id="login-form" data-api="/api/auth/login" data-redirect="/" novalidate>
+    <div class="field">
+      <label for="phone">{{ t('auth.phone') }}</label>
+      <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel"
+             placeholder="{{ t('auth.phone_ph') }}" required dir="ltr">
+    </div>
+    <div class="field">
+      <label for="password">{{ t('auth.password') }}</label>
+      <input id="password" name="password" type="password" autocomplete="current-password"
+             placeholder="{{ t('auth.password_ph') }}" required>
+    </div>
+    <div class="form-error" role="alert" hidden></div>
+    <button type="submit" class="btn btn-primary btn-block">{{ t('auth.login_btn') }}</button>
+  </form>
+  <div class="auth-links">
+    <a href="/forgot">{{ t('auth.forgot') }}</a>
+    <span class="muted">{{ t('auth.no_account') }}</span>
+    <a href="/register">{{ t('nav.register') }}</a>
+  </div>
+</div>
+{% endblock %}

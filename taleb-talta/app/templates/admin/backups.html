@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "admin/subnav.html" %}
+<h1>{{ t('backup.title') }}</h1>
+<p class="muted">{{ t('backup.desc_real') }}</p>
+<form id="backup-form" class="card inline-form"><label class="check-row"><input type="checkbox" name="include_uploads"> {{ t('backup.setting_include_uploads') }}</label><button class="btn btn-primary" type="submit">{{ t('backup.run') }}</button></form>
+<p class="muted">{{ t('backup.restore_hint') }}</p>
+<div class="card table-wrap"><table class="table"><thead><tr><th>{{ t('backup.file') }}</th><th>{{ t('buy.status') }}</th><th>{{ t('misc.size') }}</th><th>{{ t('time.date') }}</th><th></th></tr></thead><tbody id="backups-body"></tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/admin-backups.js" defer></script>{% endblock %}
